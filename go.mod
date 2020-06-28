@@ -1,3 +1,3 @@
-module github.com/thinkgos/fifo
+module github.com/thinkgos/container
 
 go 1.14

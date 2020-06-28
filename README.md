@@ -1,7 +1,10 @@
-# fifo
-[![GoDoc](https://godoc.org/github.com/thinkgos/fifo?status.svg)](https://godoc.org/github.com/thinkgos/fifo)
-[![Build Status](https://travis-ci.org/thinkgos/fifo.svg?branch=master)](https://travis-ci.org/thinkgos/fifo)
-[![codecov](https://codecov.io/gh/thinkgos/fifo/branch/master/graph/badge.svg)](https://codecov.io/gh/thinkgos/fifo)
-![Action Status](https://github.com/thinkgos/fifo/workflows/Go/badge.svg)
-[![Go Report Card](https://goreportcard.com/badge/github.com/thinkgos/fifo)](https://goreportcard.com/report/github.com/thinkgos/fifo)
-[![Licence](https://img.shields.io/github/license/thinkgos/fifo)](https://raw.githubusercontent.com/thinkgos/fifo/master/LICENSE)  
+# container
+
+extract from k8s package
+
+[![GoDoc](https://godoc.org/github.com/thinkgos/container?status.svg)](https://godoc.org/github.com/thinkgos/container)
+[![Build Status](https://travis-ci.org/thinkgos/container.svg?branch=master)](https://travis-ci.org/thinkgos/container)
+[![codecov](https://codecov.io/gh/thinkgos/container/branch/master/graph/badge.svg)](https://codecov.io/gh/thinkgos/container)
+![Action Status](https://github.com/thinkgos/container/workflows/Go/badge.svg)
+[![Go Report Card](https://goreportcard.com/badge/github.com/thinkgos/container)](https://goreportcard.com/report/github.com/thinkgos/container)
+[![Licence](https://img.shields.io/github/license/thinkgos/container)](https://raw.githubusercontent.com/thinkgos/container/master/LICENSE)  

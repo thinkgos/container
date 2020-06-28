@@ -20,7 +20,8 @@ import (
 	"errors"
 	"sync"
 
-	"github.com/thinkgos/fifo/sets"
+	"github.com/thinkgos/container"
+	"github.com/thinkgos/container/sets"
 )
 
 // PopProcessFunc is passed to Pop() method of Queue interface.
@@ -50,7 +51,7 @@ func (e ErrRequeue) Error() string {
 // A Queue can be accessed concurrently from multiple goroutines.
 // A Queue can be "closed", after which Pop operations return an error.
 type Queue interface {
-	Store
+	container.Store
 
 	// Pop blocks until there is at least one key to process or the
 	// Queue is closed.  In the latter case Pop returns with an error.
@@ -123,7 +124,7 @@ type FIFO struct {
 
 	// keyFunc is used to make the key used for queued item insertion and retrieval, and
 	// should be deterministic.
-	keyFunc KeyFunc
+	keyFunc container.KeyFunc
 
 	// Indication the queue is closed.
 	// Used to indicate a queue is closed so a control loop can exit when a queue is empty.
@@ -156,7 +157,7 @@ func (f *FIFO) HasSynced() bool {
 func (f *FIFO) Add(obj interface{}) error {
 	id, err := f.keyFunc(obj)
 	if err != nil {
-		return KeyError{obj, err}
+		return container.KeyError{obj, err}
 	}
 	f.lock.Lock()
 	defer f.lock.Unlock()
@@ -178,7 +179,7 @@ func (f *FIFO) Add(obj interface{}) error {
 func (f *FIFO) AddIfNotPresent(obj interface{}) error {
 	id, err := f.keyFunc(obj)
 	if err != nil {
-		return KeyError{obj, err}
+		return container.KeyError{obj, err}
 	}
 	f.lock.Lock()
 	defer f.lock.Unlock()
@@ -210,7 +211,7 @@ func (f *FIFO) Update(obj interface{}) error {
 func (f *FIFO) Delete(obj interface{}) error {
 	id, err := f.keyFunc(obj)
 	if err != nil {
-		return KeyError{obj, err}
+		return container.KeyError{obj, err}
 	}
 	f.lock.Lock()
 	defer f.lock.Unlock()
@@ -246,7 +247,7 @@ func (f *FIFO) ListKeys() []string {
 func (f *FIFO) Get(obj interface{}) (item interface{}, exists bool, err error) {
 	key, err := f.keyFunc(obj)
 	if err != nil {
-		return nil, false, KeyError{obj, err}
+		return nil, false, container.KeyError{obj, err}
 	}
 	return f.GetByKey(key)
 }
@@ -318,7 +319,7 @@ func (f *FIFO) Replace(list []interface{}, resourceVersion string) error {
 	for _, item := range list {
 		key, err := f.keyFunc(item)
 		if err != nil {
-			return KeyError{item, err}
+			return container.KeyError{item, err}
 		}
 		items[key] = item
 	}
@@ -365,7 +366,7 @@ func (f *FIFO) Resync() error {
 
 // NewFIFO returns a Store which can be used to queue up items to
 // process.
-func NewFIFO(keyFunc KeyFunc) *FIFO {
+func NewFIFO(keyFunc container.KeyFunc) *FIFO {
 	f := &FIFO{
 		items:   map[string]interface{}{},
 		queue:   []string{},
