@@ -22,6 +22,9 @@ import (
 )
 
 func TestCompare(t *testing.T) {
+	// nil
+	assert.Equal(t, Compare(nil, nil), 0)
+
 	// bool
 	assert.Equal(t, Compare(false, true), -1)
 	assert.Equal(t, Compare(false, false), 0)
@@ -107,4 +110,11 @@ func TestCompare(t *testing.T) {
 	assert.Equal(t, Compare(t1, t2), -1)
 	assert.Equal(t, Compare(t1, t1), 0)
 	assert.Equal(t, Compare(t2, t1), 1)
+
+	// cause panic
+	assert.Panics(t, func() { Compare(nil, 1) })
+	assert.Panics(t, func() { Compare(uint(1), 1) })
+	assert.Panics(t, func() { Compare(uint(1), 1) })
+	assert.Panics(t, func() { Compare(time.Now(), struct{}{}) })
+	assert.Panics(t, func() { Compare(map[string]string{"a": "b"}, map[string]string{"a": "b"}) })
 }

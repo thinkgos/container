@@ -17,14 +17,16 @@ package stack
 
 import (
 	"container/list"
-
-	"github.com/thinkgos/container"
 )
 
 // Interface is a stack, which is LIFO (last-in-first-out).
 type Interface interface {
-	container.Interface
-
+	// Len returns the number of elements in the collection.
+	Len() int
+	// IsEmpty returns true if this container contains no elements.
+	IsEmpty() bool
+	// Clear initializes or clears all of the elements from this container.
+	Clear()
 	// Push pushes an element into this stack.
 	Push(val interface{})
 	// Pop pops the element on the top of this stack.
@@ -59,7 +61,6 @@ func (s *stack) Push(val interface{}) {
 func (s *stack) Pop() interface{} {
 	if ele := s.l.Front(); ele != nil {
 		return s.l.Remove(ele)
-
 	}
 	return nil
 }
