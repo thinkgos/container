@@ -38,6 +38,12 @@ func TestQueuePeek(t *testing.T) {
 	val2, ok := q.Peek().(int)
 	assert.True(t, ok)
 	assert.Equal(t, 5, val2)
+
+	q.Poll()
+	q.Poll()
+
+	val3 := q.Peek()
+	assert.Nil(t, val3)
 }
 
 func TestQueuePoll(t *testing.T) {
@@ -52,6 +58,9 @@ func TestQueuePoll(t *testing.T) {
 	val2, ok := q.Poll().(string)
 	assert.True(t, ok)
 	assert.Equal(t, "hello", val2)
+
+	val3 := q.Poll()
+	assert.Nil(t, val3)
 }
 
 func TestQueueIsEmpty(t *testing.T) {
