@@ -61,26 +61,26 @@ func (s Uint8) Delete(items ...uint8) Uint8 {
 	return s
 }
 
-// Has returns true if and only if item is contained in the set.
-func (s Uint8) Has(item uint8) bool {
+// Contain returns true if and only if item is contained in the set.
+func (s Uint8) Contain(item uint8) bool {
 	_, contained := s[item]
 	return contained
 }
 
-// HasAll returns true if and only if all items are contained in the set.
-func (s Uint8) HasAll(items ...uint8) bool {
+// ContainAll returns true if and only if all items are contained in the set.
+func (s Uint8) ContainAll(items ...uint8) bool {
 	for _, item := range items {
-		if !s.Has(item) {
+		if !s.Contain(item) {
 			return false
 		}
 	}
 	return true
 }
 
-// HasAny returns true if any items are contained in the set.
-func (s Uint8) HasAny(items ...uint8) bool {
+// ContainAny returns true if any items are contained in the set.
+func (s Uint8) ContainAny(items ...uint8) bool {
 	for _, item := range items {
-		if s.Has(item) {
+		if s.Contain(item) {
 			return true
 		}
 	}
@@ -96,7 +96,7 @@ func (s Uint8) HasAny(items ...uint8) bool {
 func (s Uint8) Difference(s2 Uint8) Uint8 {
 	result := NewUint8()
 	for key := range s {
-		if !s2.Has(key) {
+		if !s2.Contain(key) {
 			result.Insert(key)
 		}
 	}
@@ -136,7 +136,7 @@ func (s1 Uint8) Intersection(s2 Uint8) Uint8 {
 		other = s1
 	}
 	for key := range walk {
-		if other.Has(key) {
+		if other.Contain(key) {
 			result.Insert(key)
 		}
 	}
@@ -146,7 +146,7 @@ func (s1 Uint8) Intersection(s2 Uint8) Uint8 {
 // IsSuperset returns true if and only if s1 is a superset of s2.
 func (s1 Uint8) IsSuperset(s2 Uint8) bool {
 	for item := range s2 {
-		if !s1.Has(item) {
+		if !s1.Contain(item) {
 			return false
 		}
 	}
@@ -185,7 +185,7 @@ func (s Uint8) UnsortedList() []uint8 {
 	return res
 }
 
-// Returns a single element from the set.
+// PopAny Returns a single element from the set.
 func (s Uint8) PopAny() (uint8, bool) {
 	for key := range s {
 		s.Delete(key)

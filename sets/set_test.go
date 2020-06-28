@@ -17,198 +17,190 @@ limitations under the License.
 package sets
 
 import (
-	"reflect"
 	"testing"
 )
 
-func TestUint8Set(t *testing.T) {
-	s := Uint8{}
-	s2 := Uint8{}
+func TestSet(t *testing.T) {
+	s := Set{}
+	s2 := Set{}
 	if len(s) != 0 {
 		t.Errorf("Expected len=0: %d", len(s))
 	}
-	s.Insert(1, 2)
+	s.Insert("a", "b")
 	if len(s) != 2 {
 		t.Errorf("Expected len=2: %d", len(s))
 	}
-	s.Insert(3)
-	if s.Contain(4) {
+	s.Insert("c")
+	if s.Contain("d") {
 		t.Errorf("Unexpected contents: %#v", s)
 	}
-	if !s.Contain(1) {
+	if !s.Contain("a") {
 		t.Errorf("Missing contents: %#v", s)
 	}
-	s.Delete(1)
-	if s.Contain(1) {
+	s.Delete("a")
+	if s.Contain("a") {
 		t.Errorf("Unexpected contents: %#v", s)
 	}
-	s.Insert(1)
-	if s.ContainAll(1, 2, 4) {
+	s.Insert("a")
+	if s.ContainAll("a", "b", "d") {
 		t.Errorf("Unexpected contents: %#v", s)
 	}
-	if !s.ContainAll(1, 2) {
+	if !s.ContainAll("a", "b") {
 		t.Errorf("Missing contents: %#v", s)
 	}
-	s2.Insert(1, 2, 4)
+	s2.Insert("a", "b", "d")
 	if s.IsSuperset(s2) {
 		t.Errorf("Unexpected contents: %#v", s)
 	}
-	s2.Delete(4)
+	s2.Delete("d")
 	if !s.IsSuperset(s2) {
 		t.Errorf("Missing contents: %#v", s)
 	}
 }
 
-func TestUint8SetDeleteMultiples(t *testing.T) {
-	s := Uint8{}
-	s.Insert(1, 2, 3)
+func TestSetDeleteMultiples(t *testing.T) {
+	s := Set{}
+	s.Insert("a", "b", "c")
 	if len(s) != 3 {
 		t.Errorf("Expected len=3: %d", len(s))
 	}
 
-	s.Delete(1, 3)
+	s.Delete("a", "c")
 	if len(s) != 1 {
 		t.Errorf("Expected len=1: %d", len(s))
 	}
-	if s.Contain(1) {
+	if s.Contain("a") {
 		t.Errorf("Unexpected contents: %#v", s)
 	}
-	if s.Contain(3) {
+	if s.Contain("c") {
 		t.Errorf("Unexpected contents: %#v", s)
 	}
-	if !s.Contain(2) {
+	if !s.Contain("b") {
 		t.Errorf("Missing contents: %#v", s)
 	}
 
 }
 
-func TestNewUint8Set(t *testing.T) {
-	s := NewUint8(1, 2, 3)
+func TestNewSet(t *testing.T) {
+	s := New("a", "b", "c")
 	if len(s) != 3 {
 		t.Errorf("Expected len=3: %d", len(s))
 	}
-	if !s.Contain(1) || !s.Contain(2) || !s.Contain(3) {
+	if !s.Contain("a") || !s.Contain("b") || !s.Contain("c") {
 		t.Errorf("Unexpected contents: %#v", s)
 	}
 }
 
-func TestUint8SetList(t *testing.T) {
-	s := NewUint8(13, 12, 11, 1)
-	if !reflect.DeepEqual(s.List(), []uint8{1, 11, 12, 13}) {
-		t.Errorf("List gave unexpected result: %#v", s.List())
-	}
-}
-
-func TestUint8SetDifference(t *testing.T) {
-	a := NewUint8(1, 2, 3)
-	b := NewUint8(1, 2, 4, 5)
+func TestSetDifference(t *testing.T) {
+	a := New("1", "2", "3")
+	b := New("1", "2", "4", "5")
 	c := a.Difference(b)
 	d := b.Difference(a)
 	if len(c) != 1 {
 		t.Errorf("Expected len=1: %d", len(c))
 	}
-	if !c.Contain(3) {
-		t.Errorf("Unexpected contents: %#v", c.List())
+	if !c.Contain("3") {
+		t.Errorf("Unexpected contents: %#v", c.UnsortedList())
 	}
 	if len(d) != 2 {
 		t.Errorf("Expected len=2: %d", len(d))
 	}
-	if !d.Contain(4) || !d.Contain(5) {
-		t.Errorf("Unexpected contents: %#v", d.List())
+	if !d.Contain("4") || !d.Contain("5") {
+		t.Errorf("Unexpected contents: %#v", d.UnsortedList())
 	}
 }
 
-func TestUint8SetHasAny(t *testing.T) {
-	a := NewUint8(1, 2, 3)
+func TestSetHasAny(t *testing.T) {
+	a := New("1", "2", "3")
 
-	if !a.ContainAny(1, 4) {
+	if !a.ContainAny("1", "4") {
 		t.Errorf("expected true, got false")
 	}
 
-	if a.ContainAny(10, 4) {
+	if a.ContainAny("0", "4") {
 		t.Errorf("expected false, got true")
 	}
 }
 
-func TestUint8SetEquals(t *testing.T) {
+func TestSetEquals(t *testing.T) {
 	// Simple case (order doesn't matter)
-	a := NewUint8(1, 2)
-	b := NewUint8(2, 1)
+	a := New("1", "2")
+	b := New("2", "1")
 	if !a.Equal(b) {
 		t.Errorf("Expected to be equal: %v vs %v", a, b)
 	}
 
 	// It is a set; duplicates are ignored
-	b = NewUint8(2, 2, 1)
+	b = New("2", "2", "1")
 	if !a.Equal(b) {
 		t.Errorf("Expected to be equal: %v vs %v", a, b)
 	}
 
 	// Edge cases around empty sets / empty strings
-	a = NewUint8()
-	b = NewUint8()
+	a = New()
+	b = New()
 	if !a.Equal(b) {
 		t.Errorf("Expected to be equal: %v vs %v", a, b)
 	}
 
-	b = NewUint8(1, 2, 3)
+	b = New("1", "2", "3")
 	if a.Equal(b) {
 		t.Errorf("Expected to be not-equal: %v vs %v", a, b)
 	}
 
-	b = NewUint8(1, 2, 0)
+	b = New("1", "2", "")
 	if a.Equal(b) {
 		t.Errorf("Expected to be not-equal: %v vs %v", a, b)
 	}
 
 	// Check for equality after mutation
-	a = NewUint8()
-	a.Insert(1)
+	a = New()
+	a.Insert("1")
 	if a.Equal(b) {
 		t.Errorf("Expected to be not-equal: %v vs %v", a, b)
 	}
 
-	a.Insert(2)
+	a.Insert("2")
 	if a.Equal(b) {
 		t.Errorf("Expected to be not-equal: %v vs %v", a, b)
 	}
 
-	a.Insert(0)
+	a.Insert("")
 	if !a.Equal(b) {
 		t.Errorf("Expected to be equal: %v vs %v", a, b)
 	}
 
-	a.Delete(0)
+	a.Delete("")
 	if a.Equal(b) {
 		t.Errorf("Expected to be not-equal: %v vs %v", a, b)
 	}
 }
 
-func TestUint8Union(t *testing.T) {
+func TestUnion(t *testing.T) {
 	tests := []struct {
-		s1       Uint8
-		s2       Uint8
-		expected Uint8
+		s1       Set
+		s2       Set
+		expected Set
 	}{
 		{
-			NewUint8(1, 2, 3, 4),
-			NewUint8(3, 4, 5, 6),
-			NewUint8(1, 2, 3, 4, 5, 6),
+			New("1", "2", "3", "4"),
+			New("3", "4", "5", "6"),
+			New("1", "2", "3", "4", "5", "6"),
 		},
 		{
-			NewUint8(1, 2, 3, 4),
-			NewUint8(),
-			NewUint8(1, 2, 3, 4),
+			New("1", "2", "3", "4"),
+			New(),
+			New("1", "2", "3", "4"),
 		},
 		{
-			NewUint8(),
-			NewUint8(1, 2, 3, 4),
-			NewUint8(1, 2, 3, 4),
+			New(),
+			New("1", "2", "3", "4"),
+			New("1", "2", "3", "4"),
 		},
 		{
-			NewUint8(),
-			NewUint8(),
-			NewUint8(),
+			New(),
+			New(),
+			New(),
 		},
 	}
 
@@ -219,41 +211,41 @@ func TestUint8Union(t *testing.T) {
 		}
 
 		if !union.Equal(test.expected) {
-			t.Errorf("Expected union.Equal(expected) but not true.  union:%v expected:%v", union.List(), test.expected.List())
+			t.Errorf("Expected union.Equal(expected) but not true.  union:%v expected:%v", union.UnsortedList(), test.expected.UnsortedList())
 		}
 	}
 }
 
-func TestUint8Intersection(t *testing.T) {
+func TestIntersection(t *testing.T) {
 	tests := []struct {
-		s1       Uint8
-		s2       Uint8
-		expected Uint8
+		s1       Set
+		s2       Set
+		expected Set
 	}{
 		{
-			NewUint8(1, 2, 3, 4),
-			NewUint8(3, 4, 5, 6),
-			NewUint8(3, 4),
+			New("1", "2", "3", "4"),
+			New("3", "4", "5", "6"),
+			New("3", "4"),
 		},
 		{
-			NewUint8(1, 2, 3, 4),
-			NewUint8(1, 2, 3, 4),
-			NewUint8(1, 2, 3, 4),
+			New("1", "2", "3", "4"),
+			New("1", "2", "3", "4"),
+			New("1", "2", "3", "4"),
 		},
 		{
-			NewUint8(1, 2, 3, 4),
-			NewUint8(),
-			NewUint8(),
+			New("1", "2", "3", "4"),
+			New(),
+			New(),
 		},
 		{
-			NewUint8(),
-			NewUint8(1, 2, 3, 4),
-			NewUint8(),
+			New(),
+			New("1", "2", "3", "4"),
+			New(),
 		},
 		{
-			NewUint8(),
-			NewUint8(),
-			NewUint8(),
+			New(),
+			New(),
+			New(),
 		},
 	}
 
@@ -264,7 +256,7 @@ func TestUint8Intersection(t *testing.T) {
 		}
 
 		if !intersection.Equal(test.expected) {
-			t.Errorf("Expected intersection.Equal(expected) but not true.  intersection:%v expected:%v", intersection.List(), test.expected.List())
+			t.Errorf("Expected intersection.Equal(expected) but not true.  intersection:%v expected:%v", intersection.UnsortedList(), test.expected.UnsortedList())
 		}
 	}
 }

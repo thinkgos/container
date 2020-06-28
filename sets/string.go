@@ -61,26 +61,26 @@ func (s String) Delete(items ...string) String {
 	return s
 }
 
-// Has returns true if and only if item is contained in the set.
-func (s String) Has(item string) bool {
+// Contain returns true if and only if item is contained in the set.
+func (s String) Contain(item string) bool {
 	_, contained := s[item]
 	return contained
 }
 
-// HasAll returns true if and only if all items are contained in the set.
-func (s String) HasAll(items ...string) bool {
+// ContainAll returns true if and only if all items are contained in the set.
+func (s String) ContainAll(items ...string) bool {
 	for _, item := range items {
-		if !s.Has(item) {
+		if !s.Contain(item) {
 			return false
 		}
 	}
 	return true
 }
 
-// HasAny returns true if any items are contained in the set.
-func (s String) HasAny(items ...string) bool {
+// ContainAny returns true if any items are contained in the set.
+func (s String) ContainAny(items ...string) bool {
 	for _, item := range items {
-		if s.Has(item) {
+		if s.Contain(item) {
 			return true
 		}
 	}
@@ -96,7 +96,7 @@ func (s String) HasAny(items ...string) bool {
 func (s String) Difference(s2 String) String {
 	result := NewString()
 	for key := range s {
-		if !s2.Has(key) {
+		if !s2.Contain(key) {
 			result.Insert(key)
 		}
 	}
@@ -136,7 +136,7 @@ func (s1 String) Intersection(s2 String) String {
 		other = s1
 	}
 	for key := range walk {
-		if other.Has(key) {
+		if other.Contain(key) {
 			result.Insert(key)
 		}
 	}
@@ -146,7 +146,7 @@ func (s1 String) Intersection(s2 String) String {
 // IsSuperset returns true if and only if s1 is a superset of s2.
 func (s1 String) IsSuperset(s2 String) bool {
 	for item := range s2 {
-		if !s1.Has(item) {
+		if !s1.Contain(item) {
 			return false
 		}
 	}
@@ -185,7 +185,7 @@ func (s String) UnsortedList() []string {
 	return res
 }
 
-// Returns a single element from the set.
+// PopAny Returns a single element from the set.
 func (s String) PopAny() (string, bool) {
 	for key := range s {
 		s.Delete(key)

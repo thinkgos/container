@@ -61,26 +61,26 @@ func (s Int16) Delete(items ...int16) Int16 {
 	return s
 }
 
-// Has returns true if and only if item is contained in the set.
-func (s Int16) Has(item int16) bool {
+// Contain returns true if and only if item is contained in the set.
+func (s Int16) Contain(item int16) bool {
 	_, contained := s[item]
 	return contained
 }
 
-// HasAll returns true if and only if all items are contained in the set.
-func (s Int16) HasAll(items ...int16) bool {
+// ContainAll returns true if and only if all items are contained in the set.
+func (s Int16) ContainAll(items ...int16) bool {
 	for _, item := range items {
-		if !s.Has(item) {
+		if !s.Contain(item) {
 			return false
 		}
 	}
 	return true
 }
 
-// HasAny returns true if any items are contained in the set.
-func (s Int16) HasAny(items ...int16) bool {
+// ContainAny returns true if any items are contained in the set.
+func (s Int16) ContainAny(items ...int16) bool {
 	for _, item := range items {
-		if s.Has(item) {
+		if s.Contain(item) {
 			return true
 		}
 	}
@@ -96,7 +96,7 @@ func (s Int16) HasAny(items ...int16) bool {
 func (s Int16) Difference(s2 Int16) Int16 {
 	result := NewInt16()
 	for key := range s {
-		if !s2.Has(key) {
+		if !s2.Contain(key) {
 			result.Insert(key)
 		}
 	}
@@ -136,7 +136,7 @@ func (s1 Int16) Intersection(s2 Int16) Int16 {
 		other = s1
 	}
 	for key := range walk {
-		if other.Has(key) {
+		if other.Contain(key) {
 			result.Insert(key)
 		}
 	}
@@ -146,7 +146,7 @@ func (s1 Int16) Intersection(s2 Int16) Int16 {
 // IsSuperset returns true if and only if s1 is a superset of s2.
 func (s1 Int16) IsSuperset(s2 Int16) bool {
 	for item := range s2 {
-		if !s1.Has(item) {
+		if !s1.Contain(item) {
 			return false
 		}
 	}
@@ -185,7 +185,7 @@ func (s Int16) UnsortedList() []int16 {
 	return res
 }
 
-// Returns a single element from the set.
+// PopAny Returns a single element from the set.
 func (s Int16) PopAny() (int16, bool) {
 	for key := range s {
 		s.Delete(key)

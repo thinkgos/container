@@ -32,21 +32,21 @@ func TestUint32Set(t *testing.T) {
 		t.Errorf("Expected len=2: %d", len(s))
 	}
 	s.Insert(3)
-	if s.Has(4) {
+	if s.Contain(4) {
 		t.Errorf("Unexpected contents: %#v", s)
 	}
-	if !s.Has(1) {
+	if !s.Contain(1) {
 		t.Errorf("Missing contents: %#v", s)
 	}
 	s.Delete(1)
-	if s.Has(1) {
+	if s.Contain(1) {
 		t.Errorf("Unexpected contents: %#v", s)
 	}
 	s.Insert(1)
-	if s.HasAll(1, 2, 4) {
+	if s.ContainAll(1, 2, 4) {
 		t.Errorf("Unexpected contents: %#v", s)
 	}
-	if !s.HasAll(1, 2) {
+	if !s.ContainAll(1, 2) {
 		t.Errorf("Missing contents: %#v", s)
 	}
 	s2.Insert(1, 2, 4)
@@ -70,13 +70,13 @@ func TestUint32SetDeleteMultiples(t *testing.T) {
 	if len(s) != 1 {
 		t.Errorf("Expected len=1: %d", len(s))
 	}
-	if s.Has(1) {
+	if s.Contain(1) {
 		t.Errorf("Unexpected contents: %#v", s)
 	}
-	if s.Has(3) {
+	if s.Contain(3) {
 		t.Errorf("Unexpected contents: %#v", s)
 	}
-	if !s.Has(2) {
+	if !s.Contain(2) {
 		t.Errorf("Missing contents: %#v", s)
 	}
 
@@ -87,7 +87,7 @@ func TestNewUint32Set(t *testing.T) {
 	if len(s) != 3 {
 		t.Errorf("Expected len=3: %d", len(s))
 	}
-	if !s.Has(1) || !s.Has(2) || !s.Has(3) {
+	if !s.Contain(1) || !s.Contain(2) || !s.Contain(3) {
 		t.Errorf("Unexpected contents: %#v", s)
 	}
 }
@@ -107,13 +107,13 @@ func TestUint32SetDifference(t *testing.T) {
 	if len(c) != 1 {
 		t.Errorf("Expected len=1: %d", len(c))
 	}
-	if !c.Has(3) {
+	if !c.Contain(3) {
 		t.Errorf("Unexpected contents: %#v", c.List())
 	}
 	if len(d) != 2 {
 		t.Errorf("Expected len=2: %d", len(d))
 	}
-	if !d.Has(4) || !d.Has(5) {
+	if !d.Contain(4) || !d.Contain(5) {
 		t.Errorf("Unexpected contents: %#v", d.List())
 	}
 }
@@ -121,11 +121,11 @@ func TestUint32SetDifference(t *testing.T) {
 func TestUint32SetHasAny(t *testing.T) {
 	a := NewUint32(1, 2, 3)
 
-	if !a.HasAny(1, 4) {
+	if !a.ContainAny(1, 4) {
 		t.Errorf("expected true, got false")
 	}
 
-	if a.HasAny(10, 4) {
+	if a.ContainAny(10, 4) {
 		t.Errorf("expected false, got true")
 	}
 }
