@@ -15,12 +15,14 @@ type Set struct {
 // Option option for New
 type Option func(Set)
 
+// WithItems with git items
 func WithItems(items ...interface{}) Option {
 	return func(s Set) {
 		s.Insert(items...)
 	}
 }
 
+// WithComparator with user's Comparator
 func WithComparator(cmp comparator.Comparator) Option {
 	return func(s Set) {
 		s.cmp = cmp

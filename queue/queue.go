@@ -14,15 +14,16 @@
 
 package queue
 
-import (
-	"github.com/thinkgos/container"
-)
-
 // Interface is a type of Queue, which is FIFO(first-in-first-out).
 type Interface interface {
-	container.Interface
+	// Len returns the number of elements in the collection.
+	Len() int
+	// IsEmpty returns true if this container contains no elements.
+	IsEmpty() bool
+	// Clear initializes or clears all of the elements from this container.
+	Clear()
 
-	// PushMulBack inserts an element into the tail of this Queue.
+	// Add inserts an element into the tail of this Queue.
 	Add(items ...interface{})
 	// Peek retrieves, but does not remove, the head of this Queue, or return nil if this Queue is empty.
 	Peek() interface{}
@@ -59,7 +60,12 @@ func (sf *Queue) IsEmpty() bool {
 	return sf.Len() == 0
 }
 
-// PushMulBack items to the queue
+// Clear initializes or clears queue.
+func (sf *Queue) Clear() {
+	sf.head, sf.tail, sf.length = nil, nil, 0
+}
+
+// Add items to the queue
 func (sf *Queue) Add(items ...interface{}) {
 	for _, item := range items {
 		e := element{
@@ -78,6 +84,7 @@ func (sf *Queue) Add(items ...interface{}) {
 	}
 }
 
+// Peek retrieves, but does not remove, the head of this Queue, or return nil if this Queue is empty.
 func (sf *Queue) Peek() interface{} {
 	if sf.head != nil {
 		return sf.head.value
@@ -85,6 +92,7 @@ func (sf *Queue) Peek() interface{} {
 	return nil
 }
 
+// Poll retrieves and removes the head of the this Queue, or return nil if this Queue is empty.
 func (sf *Queue) Poll() interface{} {
 	if sf.head != nil {
 		val := sf.head.value
@@ -99,9 +107,4 @@ func (sf *Queue) Poll() interface{} {
 	}
 
 	return nil
-}
-
-// Clear initializes or clears queue.
-func (sf *Queue) Clear() {
-	sf.head, sf.tail, sf.length = nil, nil, 0
 }
