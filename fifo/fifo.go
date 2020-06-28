@@ -157,7 +157,7 @@ func (f *FIFO) HasSynced() bool {
 func (f *FIFO) Add(obj interface{}) error {
 	id, err := f.keyFunc(obj)
 	if err != nil {
-		return container.KeyError{obj, err}
+		return container.KeyError{Obj: obj, Err: err}
 	}
 	f.lock.Lock()
 	defer f.lock.Unlock()
@@ -179,7 +179,7 @@ func (f *FIFO) Add(obj interface{}) error {
 func (f *FIFO) AddIfNotPresent(obj interface{}) error {
 	id, err := f.keyFunc(obj)
 	if err != nil {
-		return container.KeyError{obj, err}
+		return container.KeyError{Obj: obj, Err: err}
 	}
 	f.lock.Lock()
 	defer f.lock.Unlock()
@@ -211,7 +211,7 @@ func (f *FIFO) Update(obj interface{}) error {
 func (f *FIFO) Delete(obj interface{}) error {
 	id, err := f.keyFunc(obj)
 	if err != nil {
-		return container.KeyError{obj, err}
+		return container.KeyError{Obj: obj, Err: err}
 	}
 	f.lock.Lock()
 	defer f.lock.Unlock()
@@ -247,7 +247,7 @@ func (f *FIFO) ListKeys() []string {
 func (f *FIFO) Get(obj interface{}) (item interface{}, exists bool, err error) {
 	key, err := f.keyFunc(obj)
 	if err != nil {
-		return nil, false, container.KeyError{obj, err}
+		return nil, false, container.KeyError{Obj: obj, Err: err}
 	}
 	return f.GetByKey(key)
 }
@@ -264,10 +264,7 @@ func (f *FIFO) GetByKey(key string) (item interface{}, exists bool, err error) {
 func (f *FIFO) IsClosed() bool {
 	f.lock.Lock()
 	defer f.lock.Unlock()
-	if f.closed {
-		return true
-	}
-	return false
+	return f.closed
 }
 
 // Pop waits until an item is ready and processes it. If multiple items are
@@ -319,7 +316,7 @@ func (f *FIFO) Replace(list []interface{}, resourceVersion string) error {
 	for _, item := range list {
 		key, err := f.keyFunc(item)
 		if err != nil {
-			return container.KeyError{item, err}
+			return container.KeyError{Obj: item, Err: err}
 		}
 		items[key] = item
 	}
