@@ -48,7 +48,7 @@ func TestStackIsEmpty(t *testing.T) {
 	s.Push(6)
 
 	assert.False(t, s.IsEmpty())
-	s.Init()
+	s.Clear()
 	assert.True(t, s.IsEmpty())
 }
 
@@ -57,6 +57,6 @@ func TestStackInit(t *testing.T) {
 	s.Push(5)
 	s.Push(6)
 
-	s.Init()
+	s.Clear()
 	assert.Zero(t, s.Len())
 }

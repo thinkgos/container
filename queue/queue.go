@@ -22,7 +22,7 @@ import (
 type Interface interface {
 	container.Interface
 
-	// Add inserts an element into the tail of this Queue.
+	// PushMulBack inserts an element into the tail of this Queue.
 	Add(items ...interface{})
 	// Peek retrieves, but does not remove, the head of this Queue, or return nil if this Queue is empty.
 	Peek() interface{}
@@ -59,7 +59,7 @@ func (sf *Queue) IsEmpty() bool {
 	return sf.Len() == 0
 }
 
-// Add items to the queue
+// PushMulBack items to the queue
 func (sf *Queue) Add(items ...interface{}) {
 	for _, item := range items {
 		e := element{
@@ -101,7 +101,7 @@ func (sf *Queue) Poll() interface{} {
 	return nil
 }
 
-// Init initializes or clears queue.
-func (sf *Queue) Init() {
+// Clear initializes or clears queue.
+func (sf *Queue) Clear() {
 	sf.head, sf.tail, sf.length = nil, nil, 0
 }

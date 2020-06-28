@@ -140,7 +140,7 @@ func (h *Heap) Close() {
 	h.cond.Broadcast()
 }
 
-// Add inserts an item, and puts it in the queue. The item is updated if it
+// PushMulBack inserts an item, and puts it in the queue. The item is updated if it
 // already exists.
 func (h *Heap) Add(obj interface{}) error {
 	key, err := h.data.keyFunc(obj)
@@ -217,7 +217,7 @@ func (h *Heap) addIfNotPresentLocked(key string, obj interface{}) {
 	heap.Push(h.data, &itemKeyValue{key, obj})
 }
 
-// Update is the same as Add in this implementation. When the item does not
+// Update is the same as PushMulBack in this implementation. When the item does not
 // exist, it is added.
 func (h *Heap) Update(obj interface{}) error {
 	return h.Add(obj)

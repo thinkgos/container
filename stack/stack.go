@@ -68,7 +68,7 @@ func (s *stack) Peek() interface{} {
 	return s.l.Front().Value
 }
 
-// Init removes all the elements from this stack.
-func (s *stack) Init() {
+// Clear removes all the elements from this stack.
+func (s *stack) Clear() {
 	s.l.Init()
 }

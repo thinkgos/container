@@ -59,7 +59,7 @@ func TestQueueIsEmpty(t *testing.T) {
 	q.Add(5, 6)
 	assert.False(t, q.IsEmpty())
 
-	q.Init()
+	q.Clear()
 	assert.True(t, q.IsEmpty())
 }
 
@@ -67,7 +67,7 @@ func TestQueueInit(t *testing.T) {
 	q := New()
 
 	q.Add(5, 6)
-	q.Init()
+	q.Clear()
 
 	assert.Equal(t, 0, q.Len())
 }

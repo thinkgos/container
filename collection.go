@@ -6,6 +6,6 @@ type Interface interface {
 	Len() int
 	// IsEmpty returns true if this container contains no elements.
 	IsEmpty() bool
-	// Init initializes or clears all of the elements from this container.
-	Init()
+	// Clear initializes or clears all of the elements from this container.
+	Clear()
 }
