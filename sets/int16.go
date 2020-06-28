@@ -120,12 +120,12 @@ func (s1 Int16) Union(s2 Int16) Int16 {
 	return result
 }
 
-// Int16ersection returns a new set which includes the item in BOTH s1 and s2
+// Intersection returns a new set which includes the item in BOTH s1 and s2
 // For example:
 // s1 = {a1, a2}
 // s2 = {a2, a3}
-// s1.Int16ersection(s2) = {a2}
-func (s1 Int16) Int16ersection(s2 Int16) Int16 {
+// s1.Intersection(s2) = {a2}
+func (s1 Int16) Intersection(s2 Int16) Int16 {
 	var walk, other Int16
 	result := NewInt16()
 	if s1.Len() < s2.Len() {

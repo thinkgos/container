@@ -120,12 +120,12 @@ func (s1 Uint16) Union(s2 Uint16) Uint16 {
 	return result
 }
 
-// Uint16ersection returns a new set which includes the item in BOTH s1 and s2
+// Intersection returns a new set which includes the item in BOTH s1 and s2
 // For example:
 // s1 = {a1, a2}
 // s2 = {a2, a3}
-// s1.Uint16ersection(s2) = {a2}
-func (s1 Uint16) Uint16ersection(s2 Uint16) Uint16 {
+// s1.Intersection(s2) = {a2}
+func (s1 Uint16) Intersection(s2 Uint16) Uint16 {
 	var walk, other Uint16
 	result := NewUint16()
 	if s1.Len() < s2.Len() {

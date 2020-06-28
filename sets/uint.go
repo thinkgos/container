@@ -120,12 +120,12 @@ func (s1 Uint) Union(s2 Uint) Uint {
 	return result
 }
 
-// Uintersection returns a new set which includes the item in BOTH s1 and s2
+// Intersection returns a new set which includes the item in BOTH s1 and s2
 // For example:
 // s1 = {a1, a2}
 // s2 = {a2, a3}
-// s1.Uintersection(s2) = {a2}
-func (s1 Uint) Uintersection(s2 Uint) Uint {
+// s1.Intersection(s2) = {a2}
+func (s1 Uint) Intersection(s2 Uint) Uint {
 	var walk, other Uint
 	result := NewUint()
 	if s1.Len() < s2.Len() {
