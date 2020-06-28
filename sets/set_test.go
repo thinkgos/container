@@ -21,14 +21,14 @@ import (
 )
 
 func TestSet(t *testing.T) {
-	s := Set{}
-	s2 := Set{}
-	if len(s) != 0 {
-		t.Errorf("Expected len=0: %d", len(s))
+	s := New()
+	s2 := New()
+	if len(s.m) != 0 {
+		t.Errorf("Expected len=0: %d", len(s.m))
 	}
 	s.Insert("a", "b")
-	if len(s) != 2 {
-		t.Errorf("Expected len=2: %d", len(s))
+	if len(s.m) != 2 {
+		t.Errorf("Expected len=2: %d", len(s.m))
 	}
 	s.Insert("c")
 	if s.Contain("d") {
@@ -59,15 +59,15 @@ func TestSet(t *testing.T) {
 }
 
 func TestSetDeleteMultiples(t *testing.T) {
-	s := Set{}
+	s := New()
 	s.Insert("a", "b", "c")
-	if len(s) != 3 {
-		t.Errorf("Expected len=3: %d", len(s))
+	if len(s.m) != 3 {
+		t.Errorf("Expected len=3: %d", len(s.m))
 	}
 
 	s.Delete("a", "c")
-	if len(s) != 1 {
-		t.Errorf("Expected len=1: %d", len(s))
+	if len(s.m) != 1 {
+		t.Errorf("Expected len=1: %d", len(s.m))
 	}
 	if s.Contain("a") {
 		t.Errorf("Unexpected contents: %#v", s)
@@ -82,9 +82,9 @@ func TestSetDeleteMultiples(t *testing.T) {
 }
 
 func TestNewSet(t *testing.T) {
-	s := New("a", "b", "c")
-	if len(s) != 3 {
-		t.Errorf("Expected len=3: %d", len(s))
+	s := New(WithItems("a", "b", "c"))
+	if len(s.m) != 3 {
+		t.Errorf("Expected len=3: %d", len(s.m))
 	}
 	if !s.Contain("a") || !s.Contain("b") || !s.Contain("c") {
 		t.Errorf("Unexpected contents: %#v", s)
@@ -92,26 +92,26 @@ func TestNewSet(t *testing.T) {
 }
 
 func TestSetDifference(t *testing.T) {
-	a := New("1", "2", "3")
-	b := New("1", "2", "4", "5")
+	a := New(WithItems("1", "2", "3"))
+	b := New(WithItems("1", "2", "4", "5"))
 	c := a.Difference(b)
 	d := b.Difference(a)
-	if len(c) != 1 {
-		t.Errorf("Expected len=1: %d", len(c))
+	if len(c.m) != 1 {
+		t.Errorf("Expected len=1: %d", len(c.m))
 	}
 	if !c.Contain("3") {
-		t.Errorf("Unexpected contents: %#v", c.UnsortedList())
+		t.Errorf("Unexpected contents: %#v", c.List())
 	}
-	if len(d) != 2 {
-		t.Errorf("Expected len=2: %d", len(d))
+	if len(d.m) != 2 {
+		t.Errorf("Expected len=2: %d", len(d.m))
 	}
 	if !d.Contain("4") || !d.Contain("5") {
-		t.Errorf("Unexpected contents: %#v", d.UnsortedList())
+		t.Errorf("Unexpected contents: %#v", d.List())
 	}
 }
 
 func TestSetHasAny(t *testing.T) {
-	a := New("1", "2", "3")
+	a := New(WithItems("1", "2", "3"))
 
 	if !a.ContainAny("1", "4") {
 		t.Errorf("expected true, got false")
@@ -124,14 +124,14 @@ func TestSetHasAny(t *testing.T) {
 
 func TestSetEquals(t *testing.T) {
 	// Simple case (order doesn't matter)
-	a := New("1", "2")
-	b := New("2", "1")
+	a := New(WithItems("1", "2"))
+	b := New(WithItems("2", "1"))
 	if !a.Equal(b) {
 		t.Errorf("Expected to be equal: %v vs %v", a, b)
 	}
 
 	// It is a set; duplicates are ignored
-	b = New("2", "2", "1")
+	b = New(WithItems("2", "2", "1"))
 	if !a.Equal(b) {
 		t.Errorf("Expected to be equal: %v vs %v", a, b)
 	}
@@ -143,12 +143,12 @@ func TestSetEquals(t *testing.T) {
 		t.Errorf("Expected to be equal: %v vs %v", a, b)
 	}
 
-	b = New("1", "2", "3")
+	b = New(WithItems("1", "2", "3"))
 	if a.Equal(b) {
 		t.Errorf("Expected to be not-equal: %v vs %v", a, b)
 	}
 
-	b = New("1", "2", "")
+	b = New(WithItems("1", "2", ""))
 	if a.Equal(b) {
 		t.Errorf("Expected to be not-equal: %v vs %v", a, b)
 	}
@@ -183,19 +183,19 @@ func TestUnion(t *testing.T) {
 		expected Set
 	}{
 		{
-			New("1", "2", "3", "4"),
-			New("3", "4", "5", "6"),
-			New("1", "2", "3", "4", "5", "6"),
+			New(WithItems("1", "2", "3", "4")),
+			New(WithItems("3", "4", "5", "6")),
+			New(WithItems("1", "2", "3", "4", "5", "6")),
 		},
 		{
-			New("1", "2", "3", "4"),
+			New(WithItems("1", "2", "3", "4")),
 			New(),
-			New("1", "2", "3", "4"),
+			New(WithItems("1", "2", "3", "4")),
 		},
 		{
 			New(),
-			New("1", "2", "3", "4"),
-			New("1", "2", "3", "4"),
+			New(WithItems("1", "2", "3", "4")),
+			New(WithItems("1", "2", "3", "4")),
 		},
 		{
 			New(),
@@ -211,7 +211,7 @@ func TestUnion(t *testing.T) {
 		}
 
 		if !union.Equal(test.expected) {
-			t.Errorf("Expected union.Equal(expected) but not true.  union:%v expected:%v", union.UnsortedList(), test.expected.UnsortedList())
+			t.Errorf("Expected union.Equal(expected) but not true.  union:%v expected:%v", union.List(), test.expected.List())
 		}
 	}
 }
@@ -223,23 +223,23 @@ func TestIntersection(t *testing.T) {
 		expected Set
 	}{
 		{
-			New("1", "2", "3", "4"),
-			New("3", "4", "5", "6"),
-			New("3", "4"),
+			New(WithItems("1", "2", "3", "4")),
+			New(WithItems("3", "4", "5", "6")),
+			New(WithItems("3", "4")),
 		},
 		{
-			New("1", "2", "3", "4"),
-			New("1", "2", "3", "4"),
-			New("1", "2", "3", "4"),
+			New(WithItems("1", "2", "3", "4")),
+			New(WithItems("1", "2", "3", "4")),
+			New(WithItems("1", "2", "3", "4")),
 		},
 		{
-			New("1", "2", "3", "4"),
+			New(WithItems("1", "2", "3", "4")),
 			New(),
 			New(),
 		},
 		{
 			New(),
-			New("1", "2", "3", "4"),
+			New(WithItems("1", "2", "3", "4")),
 			New(),
 		},
 		{
@@ -256,7 +256,7 @@ func TestIntersection(t *testing.T) {
 		}
 
 		if !intersection.Equal(test.expected) {
-			t.Errorf("Expected intersection.Equal(expected) but not true.  intersection:%v expected:%v", intersection.UnsortedList(), test.expected.UnsortedList())
+			t.Errorf("Expected intersection.Equal(expected) but not true.  intersection:%v expected:%v", intersection.List(), test.expected.List())
 		}
 	}
 }

@@ -2,15 +2,39 @@ package sets
 
 import (
 	"reflect"
+
+	"github.com/thinkgos/container/comparator"
 )
 
 // Set sets.Set is a set of interface, implemented via map[interface{}]struct{} for minimal memory consumption.
-type Set map[interface{}]Empty
+type Set struct {
+	m   map[interface{}]Empty
+	cmp comparator.Comparator
+}
+
+// Option option for New
+type Option func(Set)
+
+func WithItems(items ...interface{}) Option {
+	return func(s Set) {
+		s.Insert(items...)
+	}
+}
+
+func WithComparator(cmp comparator.Comparator) Option {
+	return func(s Set) {
+		s.cmp = cmp
+	}
+}
 
 // New creates a interface{} from a list of values.
-func New(items ...interface{}) Set {
-	ss := Set{}
-	ss.Insert(items...)
+func New(opts ...Option) Set {
+	ss := Set{
+		m: make(map[interface{}]Empty),
+	}
+	for _, opt := range opts {
+		opt(ss)
+	}
 	return ss
 }
 
@@ -18,7 +42,7 @@ func New(items ...interface{}) Set {
 // If the value passed in is not actually a map, this will panic.
 func SetKey(theMap interface{}) Set {
 	v := reflect.ValueOf(theMap)
-	ret := Set{}
+	ret := New()
 
 	for _, keyValue := range v.MapKeys() {
 		ret.Insert(keyValue.Interface())
@@ -29,7 +53,7 @@ func SetKey(theMap interface{}) Set {
 // Insert adds items to the set.
 func (s Set) Insert(items ...interface{}) Set {
 	for _, item := range items {
-		s[item] = Empty{}
+		s.m[item] = Empty{}
 	}
 	return s
 }
@@ -37,14 +61,14 @@ func (s Set) Insert(items ...interface{}) Set {
 // Delete removes all items from the set.
 func (s Set) Delete(items ...interface{}) Set {
 	for _, item := range items {
-		delete(s, item)
+		delete(s.m, item)
 	}
 	return s
 }
 
 // Contain returns true if and only if item is contained in the set.
 func (s Set) Contain(item interface{}) bool {
-	_, contained := s[item]
+	_, contained := s.m[item]
 	return contained
 }
 
@@ -76,7 +100,7 @@ func (s Set) ContainAny(items ...interface{}) bool {
 // s2.Difference(s1) = {a4, a5}
 func (s Set) Difference(s2 Set) Set {
 	result := New()
-	for key := range s {
+	for key := range s.m {
 		if !s2.Contain(key) {
 			result.Insert(key)
 		}
@@ -92,10 +116,10 @@ func (s Set) Difference(s2 Set) Set {
 // s2.Union(s1) = {a1, a2, a3, a4}
 func (s1 Set) Union(s2 Set) Set {
 	result := New()
-	for key := range s1 {
+	for key := range s1.m {
 		result.Insert(key)
 	}
-	for key := range s2 {
+	for key := range s2.m {
 		result.Insert(key)
 	}
 	return result
@@ -116,7 +140,7 @@ func (s1 Set) Intersection(s2 Set) Set {
 		walk = s2
 		other = s1
 	}
-	for key := range walk {
+	for key := range walk.m {
 		if other.Contain(key) {
 			result.Insert(key)
 		}
@@ -126,7 +150,7 @@ func (s1 Set) Intersection(s2 Set) Set {
 
 // IsSuperset returns true if and only if s1 is a superset of s2.
 func (s1 Set) IsSuperset(s2 Set) bool {
-	for item := range s2 {
+	for item := range s2.m {
 		if !s1.Contain(item) {
 			return false
 		}
@@ -136,15 +160,15 @@ func (s1 Set) IsSuperset(s2 Set) bool {
 
 // List returns the contents as a sorted slice.
 func (s Set) List() []interface{} {
-	// TODO: implement list
-	panic("not implement")
-	return nil
+	res := s.UnsortedList()
+	comparator.Sort(res, s.cmp)
+	return res
 }
 
 // UnsortedList returns the slice with contents in random order.
 func (s Set) UnsortedList() []interface{} {
-	res := make([]interface{}, 0, len(s))
-	for key := range s {
+	res := make([]interface{}, 0, len(s.m))
+	for key := range s.m {
 		res = append(res, key)
 	}
 	return res
@@ -154,12 +178,12 @@ func (s Set) UnsortedList() []interface{} {
 // Two sets are equal if their membership is identical.
 // (In practice, this means same elements, order doesn't matter)
 func (s1 Set) Equal(s2 Set) bool {
-	return len(s1) == len(s2) && s1.IsSuperset(s2)
+	return len(s1.m) == len(s2.m) && s1.IsSuperset(s2)
 }
 
 // PopAny Returns a single element from the set.
 func (s Set) PopAny() (interface{}, bool) {
-	for key := range s {
+	for key := range s.m {
 		s.Delete(key)
 		return key, true
 	}
@@ -169,5 +193,5 @@ func (s Set) PopAny() (interface{}, bool) {
 
 // Len returns the size of the set.
 func (s Set) Len() int {
-	return len(s)
+	return len(s.m)
 }
