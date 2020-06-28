@@ -30,4 +30,12 @@ type ReferenceSetTypes struct {
 	c byte
 	d string
 	e int32
+	f int8
+	g int16
+	h int32
+	i uint
+	j uint8
+	k uint16
+	l uint32
+	m uint64
 }
