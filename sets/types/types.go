@@ -21,6 +21,7 @@ package types
 
 //go:generate set-gen -i k8s.io/kubernetes/pkg/util/sets/types
 
+// ReferenceSetTypes for set-gen
 type ReferenceSetTypes struct {
 	// These types all cause files to be generated.
 	// These types should be reflected in the output of
