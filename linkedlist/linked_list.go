@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// Package linked implements both an arrayList and a LinkedList.
+// Package linkedlist implements both an linked and a list.
 package linkedlist
 
 import (
@@ -141,12 +141,11 @@ func (sf *LinkedList) IsEmpty() bool {
 
 // AddTo add to the index of the list with value
 func (sf *LinkedList) AddTo(index int, val interface{}) error {
-	length := sf.Len()
-	if index < 0 || index > length {
-		return fmt.Errorf("Index out of range, index: %d, len: %d", index, length)
+	if index < 0 || index > sf.Len() {
+		return fmt.Errorf("Index out of range, index: %d, len: %d", index, sf.Len())
 	}
 
-	if index == length {
+	if index == sf.Len() {
 		sf.PushBack(val)
 	} else {
 		sf.InsertBefore(val, sf.getElement(index))
@@ -161,9 +160,8 @@ func (sf *LinkedList) Contains(val interface{}) bool {
 
 // Get get the index in the list.
 func (sf *LinkedList) Get(index int) (interface{}, error) {
-	length := sf.Len()
-	if index < 0 || index >= length {
-		return nil, fmt.Errorf("Index out of range, index:%d, len:%d", index, length)
+	if index < 0 || index >= sf.Len() {
+		return nil, fmt.Errorf("Index out of range, index:%d, len:%d", index, sf.Len())
 	}
 
 	return sf.getElement(index).Value, nil
@@ -171,9 +169,8 @@ func (sf *LinkedList) Get(index int) (interface{}, error) {
 
 // RemoveWithIndex remove the index in the list
 func (sf *LinkedList) RemoveWithIndex(index int) (interface{}, error) {
-	size := sf.Len()
-	if index < 0 || index >= size {
-		return nil, fmt.Errorf("Index out of range, index:%d, len:%d", index, size)
+	if index < 0 || index >= sf.Len() {
+		return nil, fmt.Errorf("Index out of range, index:%d, len:%d", index, sf.Len())
 	}
 	return sf.Remove(sf.getElement(index)), nil
 }
@@ -217,16 +214,12 @@ func (sf *LinkedList) Sort(reverse ...bool) {
 		return
 	}
 
-	// get all the Values
+	// get all the Values and sort the data
 	vals := sf.Values()
-
-	// sort the data
 	comparator.Sort(vals, sf.cmp, reverse...)
 
-	// clear the linked list
+	// clear the linked list and push it back
 	sf.Clear()
-
-	// add the sorted Values into the list again
 	sf.PushBack(vals...)
 }
 
@@ -237,21 +230,18 @@ func (sf *LinkedList) Values() []interface{} {
 	}
 
 	values := make([]interface{}, 0, sf.Len())
-
 	sf.Iterator(func(v interface{}) bool {
 		values = append(values, v)
 		return true
 	})
-
 	return values
 }
 
 // getElement returns the element at the specified positon.
 func (sf *LinkedList) getElement(index int) *list.Element {
-	var i int
 	var e *list.Element
 
-	if length := sf.Len(); index < (length >> 1) {
+	if i, length := 0, sf.Len(); index < (length >> 1) {
 		for i, e = 0, sf.l.Front(); i < index; i, e = i+1, e.Next() {
 		}
 	} else {
@@ -264,15 +254,12 @@ func (sf *LinkedList) getElement(index int) *list.Element {
 // indexOf returns the index of the first occurence of the specified element
 // in this list, or -1 if this list does not contain the element.
 func (sf *LinkedList) indexOf(val interface{}) int {
-	index := 0
-
-	for e := sf.l.Front(); e != nil; e = e.Next() {
+	for index, e := 0, sf.l.Front(); e != nil; e = e.Next() {
 		if sf.compare(val, e.Value) {
 			return index
 		}
 		index++
 	}
-
 	return -1
 }
 

@@ -4,27 +4,13 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
-func checkListLen(t *testing.T, l *LinkedList, len int) bool {
-	if n := l.Len(); n != len {
-		t.Errorf("l.Len() = %d, want %d", n, len)
-		return false
-	}
-	return true
-}
-
 func checkList(t *testing.T, l *LinkedList, es []interface{}) {
-	if !checkListLen(t, l, len(es)) {
-		return
-	}
-
-	i := 0
-	for e := l.l.Front(); e != nil; e = e.Next() {
-		le := e.Value.(int)
-		if le != es[i] {
-			t.Errorf("elt[%d].Value = %v, want %v", i, le, es[i])
-		}
+	require.Equal(t, len, l.Len())
+	for i, e := 0, l.l.Front(); e != nil; e = e.Next() {
+		assert.Equal(t, es[i], e.Value.(int))
 		i++
 	}
 }
