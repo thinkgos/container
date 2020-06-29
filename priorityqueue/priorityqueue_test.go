@@ -25,7 +25,9 @@ func TestPQLen(t *testing.T) {
 	q := New()
 
 	// add 3 elements
-	q.Add(5, 6, 7)
+	q.Add(5)
+	q.Add(6)
+	q.Add(7)
 
 	require.Equal(t, 3, q.Len())
 	require.False(t, q.IsEmpty())
@@ -50,7 +52,12 @@ func TestPQLen(t *testing.T) {
 func TestPQValue(t *testing.T) {
 	// create priority queue
 	q := New()
-	q.Add(15, 19, 12, 8, 13)
+	q.Add(15)
+	q.Add(19)
+	q.Add(12)
+	q.Add(8)
+	q.Add(13)
+
 	require.Equal(t, 5, q.Len())
 
 	// Peek
@@ -99,7 +106,9 @@ func TestPQMaxHeapWithComparator(t *testing.T) {
 }
 
 func pqTestPQSortImpl(t *testing.T, q *Queue, input, expected []interface{}) {
-	q.Add(input...)
+	for i := 0; i < len(input); i++ {
+		q.Add(input[i])
+	}
 
 	require.Equal(t, len(input), q.Len())
 	for i := 0; i < len(expected); i++ {
@@ -128,16 +137,18 @@ func TestPQDeleteMaxHeapWithComparator(t *testing.T) {
 	pqTestPQDeleteImpl(t, pq, []interface{}{15, 19, 12, 8, 13}, []interface{}{12, 13, 15, 19}, 8)
 }
 
-func pqTestPQDeleteImpl(t *testing.T, pq *Queue, input, expected []interface{}, val interface{}) {
-	pq.Add(input...)
-
-	pq.Remove(val)
-	require.Equal(t, len(input)-1, pq.Len())
-	assert.False(t, pq.Contains(val))
-	for i := 0; i < len(expected); i++ {
-		assert.Equal(t, expected[i], pq.Poll())
+func pqTestPQDeleteImpl(t *testing.T, q *Queue, input, expected []interface{}, val interface{}) {
+	for i := 0; i < len(input); i++ {
+		q.Add(input[i])
 	}
-	require.Zero(t, pq.Len())
+
+	q.Remove(val)
+	require.Equal(t, len(input)-1, q.Len())
+	assert.False(t, q.Contains(val))
+	for i := 0; i < len(expected); i++ {
+		assert.Equal(t, expected[i], q.Poll())
+	}
+	require.Zero(t, q.Len())
 }
 
 type myInt struct{}
@@ -157,11 +168,11 @@ func (i myInt) Compare(v1, v2 interface{}) int {
 func TestPQComparator(t *testing.T) {
 	pq := New(WithComparator(&student{}))
 
-	pq.Add(&student{name: "benjamin", age: 34},
-		&student{name: "alice", age: 21},
-		&student{name: "john", age: 42},
-		&student{name: "roy", age: 28},
-		&student{name: "moss", age: 25})
+	pq.Add(&student{name: "benjamin", age: 34})
+	pq.Add(&student{name: "alice", age: 21})
+	pq.Add(&student{name: "john", age: 42})
+	pq.Add(&student{name: "roy", age: 28})
+	pq.Add(&student{name: "moss", age: 25})
 
 	assert.Equal(t, 5, pq.Len())
 

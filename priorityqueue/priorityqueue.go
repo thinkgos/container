@@ -82,8 +82,8 @@ func (sf *Queue) IsEmpty() bool { return sf.Len() == 0 }
 func (sf *Queue) Clear() { sf.ctn.Items = make([]interface{}, 0) }
 
 // Add inserts the specified element into this priority queue.
-func (sf *Queue) Add(items ...interface{}) {
-	sf.ctn.Items = append(sf.ctn.Items, items...)
+func (sf *Queue) Add(items interface{}) {
+	sf.ctn.Items = append(sf.ctn.Items, items)
 	heap.Init(sf.ctn)
 }
 
