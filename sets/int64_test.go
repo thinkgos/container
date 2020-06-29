@@ -32,21 +32,21 @@ func TestInt64Set(t *testing.T) {
 		t.Errorf("Expected len=2: %d", len(s))
 	}
 	s.Insert(3)
-	if s.Contain(4) {
+	if s.Contains(4) {
 		t.Errorf("Unexpected contents: %#v", s)
 	}
-	if !s.Contain(1) {
+	if !s.Contains(1) {
 		t.Errorf("Missing contents: %#v", s)
 	}
 	s.Delete(1)
-	if s.Contain(1) {
+	if s.Contains(1) {
 		t.Errorf("Unexpected contents: %#v", s)
 	}
 	s.Insert(1)
-	if s.ContainAll(1, 2, 4) {
+	if s.ContainsAll(1, 2, 4) {
 		t.Errorf("Unexpected contents: %#v", s)
 	}
-	if !s.ContainAll(1, 2) {
+	if !s.ContainsAll(1, 2) {
 		t.Errorf("Missing contents: %#v", s)
 	}
 	s2.Insert(1, 2, 4)
@@ -88,13 +88,13 @@ func TestInt64SetDeleteMultiples(t *testing.T) {
 	if len(s) != 1 {
 		t.Errorf("Expected len=1: %d", len(s))
 	}
-	if s.Contain(1) {
+	if s.Contains(1) {
 		t.Errorf("Unexpected contents: %#v", s)
 	}
-	if s.Contain(3) {
+	if s.Contains(3) {
 		t.Errorf("Unexpected contents: %#v", s)
 	}
-	if !s.Contain(2) {
+	if !s.Contains(2) {
 		t.Errorf("Missing contents: %#v", s)
 	}
 
@@ -105,7 +105,7 @@ func TestNewInt64Set(t *testing.T) {
 	if len(s) != 3 {
 		t.Errorf("Expected len=3: %d", len(s))
 	}
-	if !s.Contain(1) || !s.Contain(2) || !s.Contain(3) {
+	if !s.Contains(1) || !s.Contains(2) || !s.Contains(3) {
 		t.Errorf("Unexpected contents: %#v", s)
 	}
 }
@@ -125,13 +125,13 @@ func TestInt64SetDifference(t *testing.T) {
 	if len(c) != 1 {
 		t.Errorf("Expected len=1: %d", len(c))
 	}
-	if !c.Contain(3) {
+	if !c.Contains(3) {
 		t.Errorf("Unexpected contents: %#v", c.List())
 	}
 	if len(d) != 2 {
 		t.Errorf("Expected len=2: %d", len(d))
 	}
-	if !d.Contain(4) || !d.Contain(5) {
+	if !d.Contains(4) || !d.Contains(5) {
 		t.Errorf("Unexpected contents: %#v", d.List())
 	}
 }
@@ -139,11 +139,11 @@ func TestInt64SetDifference(t *testing.T) {
 func TestInt64SetHasAny(t *testing.T) {
 	a := NewInt64(1, 2, 3)
 
-	if !a.ContainAny(1, 4) {
+	if !a.ContainsAny(1, 4) {
 		t.Errorf("expected true, got false")
 	}
 
-	if a.ContainAny(10, 4) {
+	if a.ContainsAny(10, 4) {
 		t.Errorf("expected false, got true")
 	}
 }

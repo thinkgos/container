@@ -32,21 +32,21 @@ func TestStringSet(t *testing.T) {
 		t.Errorf("Expected len=2: %d", len(s))
 	}
 	s.Insert("c")
-	if s.Contain("d") {
+	if s.Contains("d") {
 		t.Errorf("Unexpected contents: %#v", s)
 	}
-	if !s.Contain("a") {
+	if !s.Contains("a") {
 		t.Errorf("Missing contents: %#v", s)
 	}
 	s.Delete("a")
-	if s.Contain("a") {
+	if s.Contains("a") {
 		t.Errorf("Unexpected contents: %#v", s)
 	}
 	s.Insert("a")
-	if s.ContainAll("a", "b", "d") {
+	if s.ContainsAll("a", "b", "d") {
 		t.Errorf("Unexpected contents: %#v", s)
 	}
-	if !s.ContainAll("a", "b") {
+	if !s.ContainsAll("a", "b") {
 		t.Errorf("Missing contents: %#v", s)
 	}
 	s2.Insert("a", "b", "d")
@@ -88,13 +88,13 @@ func TestStringSetDeleteMultiples(t *testing.T) {
 	if len(s) != 1 {
 		t.Errorf("Expected len=1: %d", len(s))
 	}
-	if s.Contain("a") {
+	if s.Contains("a") {
 		t.Errorf("Unexpected contents: %#v", s)
 	}
-	if s.Contain("c") {
+	if s.Contains("c") {
 		t.Errorf("Unexpected contents: %#v", s)
 	}
-	if !s.Contain("b") {
+	if !s.Contains("b") {
 		t.Errorf("Missing contents: %#v", s)
 	}
 
@@ -105,7 +105,7 @@ func TestNewStringSet(t *testing.T) {
 	if len(s) != 3 {
 		t.Errorf("Expected len=3: %d", len(s))
 	}
-	if !s.Contain("a") || !s.Contain("b") || !s.Contain("c") {
+	if !s.Contains("a") || !s.Contains("b") || !s.Contains("c") {
 		t.Errorf("Unexpected contents: %#v", s)
 	}
 }
@@ -125,13 +125,13 @@ func TestStringSetDifference(t *testing.T) {
 	if len(c) != 1 {
 		t.Errorf("Expected len=1: %d", len(c))
 	}
-	if !c.Contain("3") {
+	if !c.Contains("3") {
 		t.Errorf("Unexpected contents: %#v", c.List())
 	}
 	if len(d) != 2 {
 		t.Errorf("Expected len=2: %d", len(d))
 	}
-	if !d.Contain("4") || !d.Contain("5") {
+	if !d.Contains("4") || !d.Contains("5") {
 		t.Errorf("Unexpected contents: %#v", d.List())
 	}
 }
@@ -139,11 +139,11 @@ func TestStringSetDifference(t *testing.T) {
 func TestStringSetHasAny(t *testing.T) {
 	a := NewString("1", "2", "3")
 
-	if !a.ContainAny("1", "4") {
+	if !a.ContainsAny("1", "4") {
 		t.Errorf("expected true, got false")
 	}
 
-	if a.ContainAny("0", "4") {
+	if a.ContainsAny("0", "4") {
 		t.Errorf("expected false, got true")
 	}
 }

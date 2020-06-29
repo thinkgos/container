@@ -1,4 +1,4 @@
-package linked
+package linkedlist
 
 import (
 	"testing"
@@ -6,7 +6,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func checkListLen(t *testing.T, l *List, len int) bool {
+func checkListLen(t *testing.T, l *LinkedList, len int) bool {
 	if n := l.Len(); n != len {
 		t.Errorf("l.Len() = %d, want %d", n, len)
 		return false
@@ -14,7 +14,7 @@ func checkListLen(t *testing.T, l *List, len int) bool {
 	return true
 }
 
-func checkList(t *testing.T, l *List, es []interface{}) {
+func checkList(t *testing.T, l *LinkedList, es []interface{}) {
 	if !checkListLen(t, l, len(es)) {
 		return
 	}

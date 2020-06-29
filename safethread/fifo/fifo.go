@@ -351,7 +351,7 @@ func (f *FIFO) Resync() error {
 		inQueue.Insert(id)
 	}
 	for id := range f.items {
-		if !inQueue.Contain(id) {
+		if !inQueue.Contains(id) {
 			f.queue = append(f.queue, id)
 		}
 	}

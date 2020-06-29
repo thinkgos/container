@@ -68,26 +68,26 @@ func (s Set) Delete(items ...interface{}) Set {
 	return s
 }
 
-// Contain returns true if and only if item is contained in the set.
-func (s Set) Contain(item interface{}) bool {
+// Contains returns true if and only if item is contained in the set.
+func (s Set) Contains(item interface{}) bool {
 	_, contained := s.m[item]
 	return contained
 }
 
-// ContainAll returns true if and only if all items are contained in the set.
-func (s Set) ContainAll(items ...interface{}) bool {
+// ContainsAll returns true if and only if all items are contained in the set.
+func (s Set) ContainsAll(items ...interface{}) bool {
 	for _, item := range items {
-		if !s.Contain(item) {
+		if !s.Contains(item) {
 			return false
 		}
 	}
 	return true
 }
 
-// ContainAny returns true if any items are contained in the set.
-func (s Set) ContainAny(items ...interface{}) bool {
+// ContainsAny returns true if any items are contained in the set.
+func (s Set) ContainsAny(items ...interface{}) bool {
 	for _, item := range items {
-		if s.Contain(item) {
+		if s.Contains(item) {
 			return true
 		}
 	}
@@ -103,7 +103,7 @@ func (s Set) ContainAny(items ...interface{}) bool {
 func (s Set) Difference(s2 Set) Set {
 	result := New()
 	for key := range s.m {
-		if !s2.Contain(key) {
+		if !s2.Contains(key) {
 			result.Insert(key)
 		}
 	}
@@ -143,7 +143,7 @@ func (s1 Set) Intersection(s2 Set) Set {
 		other = s1
 	}
 	for key := range walk.m {
-		if other.Contain(key) {
+		if other.Contains(key) {
 			result.Insert(key)
 		}
 	}
@@ -153,7 +153,7 @@ func (s1 Set) Intersection(s2 Set) Set {
 // IsSuperset returns true if and only if s1 is a superset of s2.
 func (s1 Set) IsSuperset(s2 Set) bool {
 	for item := range s2.m {
-		if !s1.Contain(item) {
+		if !s1.Contains(item) {
 			return false
 		}
 	}

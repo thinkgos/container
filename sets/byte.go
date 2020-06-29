@@ -61,26 +61,26 @@ func (s Byte) Delete(items ...byte) Byte {
 	return s
 }
 
-// Contain returns true if and only if item is contained in the set.
-func (s Byte) Contain(item byte) bool {
+// Contains returns true if and only if item is contained in the set.
+func (s Byte) Contains(item byte) bool {
 	_, contained := s[item]
 	return contained
 }
 
-// ContainAll returns true if and only if all items are contained in the set.
-func (s Byte) ContainAll(items ...byte) bool {
+// ContainsAll returns true if and only if all items are contained in the set.
+func (s Byte) ContainsAll(items ...byte) bool {
 	for _, item := range items {
-		if !s.Contain(item) {
+		if !s.Contains(item) {
 			return false
 		}
 	}
 	return true
 }
 
-// ContainAny returns true if any items are contained in the set.
-func (s Byte) ContainAny(items ...byte) bool {
+// ContainsAny returns true if any items are contained in the set.
+func (s Byte) ContainsAny(items ...byte) bool {
 	for _, item := range items {
-		if s.Contain(item) {
+		if s.Contains(item) {
 			return true
 		}
 	}
@@ -96,7 +96,7 @@ func (s Byte) ContainAny(items ...byte) bool {
 func (s Byte) Difference(s2 Byte) Byte {
 	result := NewByte()
 	for key := range s {
-		if !s2.Contain(key) {
+		if !s2.Contains(key) {
 			result.Insert(key)
 		}
 	}
@@ -136,7 +136,7 @@ func (s1 Byte) Intersection(s2 Byte) Byte {
 		other = s1
 	}
 	for key := range walk {
-		if other.Contain(key) {
+		if other.Contains(key) {
 			result.Insert(key)
 		}
 	}
@@ -146,7 +146,7 @@ func (s1 Byte) Intersection(s2 Byte) Byte {
 // IsSuperset returns true if and only if s1 is a superset of s2.
 func (s1 Byte) IsSuperset(s2 Byte) bool {
 	for item := range s2 {
-		if !s1.Contain(item) {
+		if !s1.Contains(item) {
 			return false
 		}
 	}
