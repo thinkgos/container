@@ -1,3 +1,17 @@
+// Copyright [2020] [thinkgos]
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 // Package priorityqueue implements an unbounded priority queue based on a priority heap.
 // The elements of the priority queue are ordered according to their natural ordering, or by a Comparator provided at PriorityQueue construction time.
 package priorityqueue
@@ -12,12 +26,11 @@ import (
 // Interface is a type of priority queue, and Queue implement this interface.
 type Interface interface {
 	queue.Interface
-
 	// Contains returns true if this queue contains the specified element.
 	Contains(val interface{}) bool
 	// Remove a single instance of the specified element from this queue, if it is present.
 	// It returns false if the target value isn't present, otherwise returns true.
-	Remove(val interface{}) bool
+	Remove(val interface{})
 }
 
 // Queue represents an unbounded priority queue based on a priority heap.
@@ -26,23 +39,26 @@ type Queue struct {
 	ctn *comparator.Container
 }
 
+// Option option for New
 type Option func(q *Queue)
 
 var _ Interface = (*Queue)(nil)
 
+// WithComparator with user's Comparator
 func WithComparator(c comparator.Comparator) Option {
 	return func(q *Queue) {
 		q.ctn.Cmp = c
 	}
 }
 
+// WithMaxHeap with max heap
 func WithMaxHeap(b bool) Option {
 	return func(q *Queue) {
 		q.ctn.Reverse = b
 	}
 }
 
-// New initializes and returns an Queue, default mini heap
+// New initializes and returns an Queue, default min heap
 func New(opts ...Option) *Queue {
 	q := &Queue{
 		ctn: &comparator.Container{
@@ -67,8 +83,8 @@ func (sf *Queue) Clear() { sf.ctn.Items = make([]interface{}, 0) }
 
 // Add inserts the specified element into this priority queue.
 func (sf *Queue) Add(items ...interface{}) {
-	for _, v := range items {
-		sf.ctn.Items = append(sf.ctn.Items, v)
+	for _, item := range items {
+		sf.ctn.Items = append(sf.ctn.Items, item)
 	}
 	heap.Init(sf.ctn)
 }
@@ -89,16 +105,15 @@ func (sf *Queue) Poll() interface{} {
 	return nil
 }
 
-func (sf *Queue) Contains(val interface{}) bool {
-	return sf.indexOf(val) >= 0
-}
+// Contains returns true if this queue contains the specified element.
+func (sf *Queue) Contains(val interface{}) bool { return sf.indexOf(val) >= 0 }
 
-func (sf *Queue) Remove(val interface{}) bool {
+// Remove a single instance of the specified element from this queue, if it is present.
+// It returns false if the target value isn't present, otherwise returns true.
+func (sf *Queue) Remove(val interface{}) {
 	if idx := sf.indexOf(val); idx >= 0 {
 		heap.Remove(sf.ctn, idx)
-		return true
 	}
-	return false
 }
 
 func (sf *Queue) indexOf(val interface{}) int {

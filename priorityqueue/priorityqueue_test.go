@@ -1,3 +1,17 @@
+// Copyright [2020] [thinkgos]
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 package priorityqueue
 
 import (
@@ -17,11 +31,11 @@ func TestPQLen(t *testing.T) {
 	require.False(t, q.IsEmpty())
 
 	// remove one element
-	require.True(t, q.Remove(6))
+	q.Remove(6)
 	require.Equal(t, 2, q.Len())
 
 	// remove one element not exist
-	require.False(t, q.Remove(10000))
+	q.Remove(10000)
 	require.Equal(t, 2, q.Len())
 
 	// Clear all elements
@@ -30,7 +44,7 @@ func TestPQLen(t *testing.T) {
 	require.True(t, q.IsEmpty())
 
 	// remove one element if not any element in queue
-	require.False(t, q.Remove(10000))
+	q.Remove(10000)
 }
 
 func TestPQValue(t *testing.T) {
@@ -60,7 +74,7 @@ func TestPQValue(t *testing.T) {
 
 	// Remove
 	require.True(t, q.Contains(15))
-	require.True(t, q.Remove(15))
+	q.Remove(15)
 	require.False(t, q.Contains(15))
 }
 
@@ -117,7 +131,7 @@ func TestPQDeleteMaxHeapWithComparator(t *testing.T) {
 func pqTestPQDeleteImpl(t *testing.T, pq *Queue, input, expected []interface{}, val interface{}) {
 	pq.Add(input...)
 
-	require.True(t, pq.Remove(val))
+	pq.Remove(val)
 	require.Equal(t, len(input)-1, pq.Len())
 	assert.False(t, pq.Contains(val))
 	for i := 0; i < len(expected); i++ {

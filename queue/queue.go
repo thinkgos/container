@@ -22,7 +22,6 @@ type Interface interface {
 	IsEmpty() bool
 	// Clear initializes or clears all of the elements from this container.
 	Clear()
-
 	// Add inserts an element into the tail of this Queue.
 	Add(items ...interface{})
 	// Peek retrieves, but does not remove, the head of this Queue, or return nil if this Queue is empty.
@@ -51,35 +50,25 @@ func New() *Queue {
 	return &Queue{}
 }
 
-func (sf *Queue) Len() int {
-	return sf.length
-}
+// Len returns the length of this priority queue.
+func (sf *Queue) Len() int { return sf.length }
 
 // IsEmpty returns true if this Queue contains no elements.
-func (sf *Queue) IsEmpty() bool {
-	return sf.Len() == 0
-}
+func (sf *Queue) IsEmpty() bool { return sf.Len() == 0 }
 
 // Clear initializes or clears queue.
-func (sf *Queue) Clear() {
-	sf.head, sf.tail, sf.length = nil, nil, 0
-}
+func (sf *Queue) Clear() { sf.head, sf.tail, sf.length = nil, nil, 0 }
 
 // Add items to the queue
 func (sf *Queue) Add(items ...interface{}) {
 	for _, item := range items {
-		e := element{
-			next:  nil,
-			value: item,
-		}
-
+		e := &element{value: item}
 		if sf.tail == nil {
-			sf.head, sf.tail = &e, &e
+			sf.head, sf.tail = e, e
 		} else {
-			sf.tail.next = &e
-			sf.tail = &e
+			sf.tail.next = e
+			sf.tail = e
 		}
-
 		sf.length++
 	}
 }
