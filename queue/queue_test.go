@@ -20,16 +20,17 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestQueueSize(t *testing.T) {
+func TestQueueLen(t *testing.T) {
 	q := New()
-	q.Add(5, 6)
-
+	q.Add(5)
+	q.Add(6)
 	assert.Equal(t, 2, q.Len())
 }
 
 func TestQueuePeek(t *testing.T) {
 	q := New()
-	q.Add(5, "hello")
+	q.Add(5)
+	q.Add("hello")
 
 	val1, ok := q.Peek().(int)
 	assert.True(t, ok)
@@ -49,8 +50,8 @@ func TestQueuePeek(t *testing.T) {
 func TestQueuePoll(t *testing.T) {
 	q := New()
 
-	q.Add(5, "hello")
-
+	q.Add(5)
+	q.Add("hello")
 	val1, ok := q.Poll().(int)
 	assert.True(t, ok)
 	assert.Equal(t, 5, val1)
@@ -65,17 +66,19 @@ func TestQueuePoll(t *testing.T) {
 
 func TestQueueIsEmpty(t *testing.T) {
 	q := New()
-	q.Add(5, 6)
+	q.Add(5)
+	q.Add(6)
 	assert.False(t, q.IsEmpty())
 
 	q.Clear()
+	assert.Equal(t, 0, q.Len())
 	assert.True(t, q.IsEmpty())
 }
 
 func TestQueueInit(t *testing.T) {
 	q := New()
-
-	q.Add(5, 6)
+	q.Add(5)
+	q.Add(6)
 	q.Clear()
 
 	assert.Equal(t, 0, q.Len())
