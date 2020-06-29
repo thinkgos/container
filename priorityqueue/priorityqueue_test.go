@@ -1,0 +1,205 @@
+package priorityqueue
+
+import (
+	"testing"
+
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+)
+
+func TestPQLen(t *testing.T) {
+	q := New()
+
+	// add 3 elements
+	q.Add(5, 6, 7)
+
+	require.Equal(t, 3, q.Len())
+	require.False(t, q.IsEmpty())
+
+	// remove one element
+	require.True(t, q.Remove(6))
+	require.Equal(t, 2, q.Len())
+
+	// remove one element not exist
+	require.False(t, q.Remove(10000))
+	require.Equal(t, 2, q.Len())
+
+	// Clear all elements
+	q.Clear()
+	require.Zero(t, q.Len())
+	require.True(t, q.IsEmpty())
+
+	// remove one element if not any element in queue
+	require.False(t, q.Remove(10000))
+}
+
+func TestPQValue(t *testing.T) {
+	// create priority queue
+	q := New()
+	q.Add(15, 19, 12, 8, 13)
+	require.Equal(t, 5, q.Len())
+
+	// Peek
+	require.Equal(t, 8, q.Peek())
+	require.Equal(t, 5, q.Len())
+
+	// Contains
+	require.True(t, q.Contains(12))
+	require.False(t, q.Contains(10000))
+
+	// Poll
+	require.Equal(t, 8, q.Poll())
+	require.Equal(t, 4, q.Len())
+
+	require.Equal(t, 12, q.Poll())
+	require.Equal(t, 3, q.Len())
+
+	// Contains (again)
+	require.False(t, q.Contains(12))
+	require.False(t, q.Contains(10000))
+
+	// Remove
+	require.True(t, q.Contains(15))
+	require.True(t, q.Remove(15))
+	require.False(t, q.Contains(15))
+}
+
+func TestPQMinHeap(t *testing.T) {
+	pq := New()
+	pqTestPQSortImpl(t, pq, []interface{}{15, 19, 12, 8, 13}, []interface{}{8, 12, 13, 15, 19})
+}
+
+func TestPQMinHeapWithComparator(t *testing.T) {
+	pq := New(WithComparator(&myInt{}))
+	pqTestPQSortImpl(t, pq, []interface{}{15, 19, 12, 8, 13}, []interface{}{19, 15, 13, 12, 8})
+}
+
+func TestPQMaxHeap(t *testing.T) {
+	pq := New(WithMaxHeap(true))
+	pqTestPQSortImpl(t, pq, []interface{}{15, 19, 12, 8, 13}, []interface{}{19, 15, 13, 12, 8})
+}
+
+func TestPQMaxHeapWithComparator(t *testing.T) {
+	q := New(WithComparator(&myInt{}), WithMaxHeap(true))
+	pqTestPQSortImpl(t, q, []interface{}{15, 19, 12, 8, 13}, []interface{}{8, 12, 13, 15, 19})
+}
+
+func pqTestPQSortImpl(t *testing.T, q *Queue, input, expected []interface{}) {
+	q.Add(input...)
+
+	require.Equal(t, len(input), q.Len())
+	for i := 0; i < len(expected); i++ {
+		assert.Equal(t, expected[i], q.Poll())
+	}
+	require.Zero(t, q.Len())
+}
+
+func TestPQDeleteMinHeap(t *testing.T) {
+	pq := New()
+	pqTestPQDeleteImpl(t, pq, []interface{}{15, 19, 12, 8, 13}, []interface{}{8, 12, 13, 15}, 19)
+}
+
+func TestPQDeleteMinHeapWithComparator(t *testing.T) {
+	pq := New(WithComparator(&myInt{}))
+	pqTestPQDeleteImpl(t, pq, []interface{}{15, 19, 12, 8, 13}, []interface{}{19, 13, 12, 8}, 15)
+}
+
+func TestPQDeleteMaxHeap(t *testing.T) {
+	pq := New(WithMaxHeap(true))
+	pqTestPQDeleteImpl(t, pq, []interface{}{15, 19, 12, 8, 13}, []interface{}{19, 15, 13, 8}, 12)
+}
+
+func TestPQDeleteMaxHeapWithComparator(t *testing.T) {
+	pq := New(WithComparator(&myInt{}), WithMaxHeap(true))
+	pqTestPQDeleteImpl(t, pq, []interface{}{15, 19, 12, 8, 13}, []interface{}{12, 13, 15, 19}, 8)
+}
+
+func pqTestPQDeleteImpl(t *testing.T, pq *Queue, input, expected []interface{}, val interface{}) {
+	pq.Add(input...)
+
+	require.True(t, pq.Remove(val))
+	require.Equal(t, len(input)-1, pq.Len())
+	assert.False(t, pq.Contains(val))
+	for i := 0; i < len(expected); i++ {
+		assert.Equal(t, expected[i], pq.Poll())
+	}
+	require.Zero(t, pq.Len())
+}
+
+type myInt struct{}
+
+// Compare returns reverse order
+func (i myInt) Compare(v1, v2 interface{}) int {
+	i1, i2 := v1.(int), v2.(int)
+	if i1 < i2 {
+		return 1
+	}
+	if i1 > i2 {
+		return -1
+	}
+	return 0
+}
+
+func TestPQComparator(t *testing.T) {
+	pq := New(WithComparator(&student{}))
+
+	pq.Add(&student{name: "benjamin", age: 34},
+		&student{name: "alice", age: 21},
+		&student{name: "john", age: 42},
+		&student{name: "roy", age: 28},
+		&student{name: "moss", age: 25})
+
+	assert.Equal(t, 5, pq.Len())
+
+	// Peek
+	v, ok := pq.Peek().(*student)
+	require.True(t, ok)
+	require.True(t, v.name == "john" && v.age == 42)
+
+	// Poll: 1 {"john", 42}
+	v, ok = pq.Poll().(*student)
+	require.True(t, ok)
+	require.True(t, v.name == "john" && v.age == 42)
+
+	// Poll: 2 {"benjamin", 34}
+	v, ok = pq.Poll().(*student)
+	require.True(t, ok)
+	require.True(t, v.name == "benjamin" && v.age == 34)
+
+	// Poll: 3 {"roy", 28}
+	v, ok = pq.Poll().(*student)
+	require.True(t, ok)
+	require.True(t, v.name == "roy" && v.age == 28)
+
+	// Poll: 4 {"moss", 25}
+	v, ok = pq.Poll().(*student)
+	require.True(t, ok)
+	require.True(t, v.name == "moss" && v.age == 25)
+
+	// Poll: 5 {"alice", 21}
+	v, ok = pq.Poll().(*student)
+	require.True(t, ok)
+	require.True(t, v.name == "alice" && v.age == 21)
+
+	// The queue should be empty now
+	require.Zero(t, pq.Len())
+	require.Nil(t, pq.Peek())
+	require.Nil(t, pq.Poll())
+}
+
+type student struct {
+	name string
+	age  int
+}
+
+// Compare returns -1, 0 or 1 when the first student's age is greater, equal to, or less than the second student's age.
+func (s *student) Compare(v1, v2 interface{}) int {
+	s1, s2 := v1.(*student), v2.(*student)
+	if s1.age < s2.age {
+		return 1
+	}
+	if s1.age > s2.age {
+		return -1
+	}
+	return 0
+}

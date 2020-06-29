@@ -104,10 +104,17 @@ func (sf *Queue) Remove(val interface{}) bool {
 func (sf *Queue) indexOf(val interface{}) int {
 	if sf.Len() > 0 && nil != val {
 		for i := 0; i < sf.Len(); i++ {
-			if val == sf.ctn.Items[i] {
+			if sf.compare(val, sf.ctn.Items[i]) {
 				return i
 			}
 		}
 	}
 	return -1
+}
+
+func (sf *Queue) compare(v1, v2 interface{}) bool {
+	if sf.ctn.Cmp != nil {
+		return sf.ctn.Cmp.Compare(v1, v2) == 0
+	}
+	return v1 == v2
 }
