@@ -123,7 +123,7 @@ func (sf *LinkedList) PollBack() interface{} {
 	return nil
 }
 
-// RemoveWithIndex remove the index in the list
+// Remove remove the index in the list
 func (sf *LinkedList) Remove(index int) (interface{}, error) {
 	if index < 0 || index >= sf.Len() {
 		return nil, fmt.Errorf("Index out of range, index:%d, len:%d", index, sf.Len())

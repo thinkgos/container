@@ -6,15 +6,15 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestStackLen(t *testing.T) {
-	s := New()
+func TestQuickStackLen(t *testing.T) {
+	s := NewQuickStack()
 	s.Push(5)
 	s.Push(6)
 	assert.Equal(t, 2, s.Len())
 }
 
-func TestStackValue(t *testing.T) {
-	s := New()
+func TestQuickStackValue(t *testing.T) {
+	s := NewQuickStack()
 	s.Push(5)
 	s.Push("hello")
 
@@ -43,8 +43,8 @@ func TestStackValue(t *testing.T) {
 	assert.Nil(t, s.Peek())
 }
 
-func TestStackIsEmpty(t *testing.T) {
-	s := New()
+func TestQuickStackIsEmpty(t *testing.T) {
+	s := NewQuickStack()
 	s.Push(5)
 	s.Push(6)
 
@@ -53,8 +53,8 @@ func TestStackIsEmpty(t *testing.T) {
 	assert.True(t, s.IsEmpty())
 }
 
-func TestStackInit(t *testing.T) {
-	s := New()
+func TestQuickStackInit(t *testing.T) {
+	s := NewQuickStack()
 	s.Push(5)
 	s.Push(6)
 

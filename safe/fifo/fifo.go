@@ -46,7 +46,7 @@ func (e ErrRequeue) Error() string {
 }
 
 // Queue extends Store with a collection of Store keys to "process".
-// Every PushMulBack, Update, or Delete may put the object's key in that collection.
+// Every Push, Update, or Delete may put the object's key in that collection.
 // A Queue has a way to derive the corresponding key given an accumulator.
 // A Queue can be accessed concurrently from multiple goroutines.
 // A Queue can be "closed", after which Pop operations return an error.
@@ -72,7 +72,7 @@ type Queue interface {
 
 	// HasSynced returns true if the first batch of keys have all been
 	// popped.  The first batch of keys are those of the first Replace
-	// operation if that happened before any PushMulBack, AddIfNotPresent,
+	// operation if that happened before any Push, AddIfNotPresent,
 	// Update, or Delete; otherwise the first batch is empty.
 	HasSynced() bool
 
@@ -117,7 +117,7 @@ type FIFO struct {
 	queue []string
 
 	// populated is true if the first batch of items inserted by Replace() has been populated
-	// or Delete/PushMulBack/Update was called first.
+	// or Delete/Push/Update was called first.
 	populated bool
 	// initialPopulationCount is the number of items inserted by the first call of Replace()
 	initialPopulationCount int
@@ -144,7 +144,7 @@ func (f *FIFO) Close() {
 	f.cond.Broadcast()
 }
 
-// HasSynced returns true if an PushMulBack/Update/Delete/AddIfNotPresent are called first,
+// HasSynced returns true if an Push/Update/Delete/AddIfNotPresent are called first,
 // or the first batch of items inserted by Replace() has been popped.
 func (f *FIFO) HasSynced() bool {
 	f.lock.Lock()
@@ -152,7 +152,7 @@ func (f *FIFO) HasSynced() bool {
 	return f.populated && f.initialPopulationCount == 0
 }
 
-// PushMulBack inserts an item, and puts it in the queue. The item is only enqueued
+// Push inserts an item, and puts it in the queue. The item is only enqueued
 // if it doesn't already exist in the set.
 func (f *FIFO) Add(obj interface{}) error {
 	id, err := f.keyFunc(obj)
@@ -200,7 +200,7 @@ func (f *FIFO) addIfNotPresent(id string, obj interface{}) {
 	f.cond.Broadcast()
 }
 
-// Update is the same as PushMulBack in this implementation.
+// Update is the same as Push in this implementation.
 func (f *FIFO) Update(obj interface{}) error {
 	return f.Add(obj)
 }

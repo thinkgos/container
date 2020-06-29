@@ -19,7 +19,7 @@ import (
 // package provides a variety of implementations of Store.
 type Store interface {
 
-	// PushMulBack adds the given object to the accumulator associated with the given object's key
+	// Add adds the given object to the accumulator associated with the given object's key
 	Add(obj interface{}) error
 
 	// Update updates the given object in the accumulator associated with the given object's key

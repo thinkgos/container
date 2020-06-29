@@ -76,7 +76,7 @@ func TestHeapBasic(t *testing.T) {
 	}
 }
 
-// Tests Heap.PushMulBack and ensures that heap invariant is preserved after adding items.
+// Tests Heap.Push and ensures that heap invariant is preserved after adding items.
 func TestHeap_Add(t *testing.T) {
 	h := NewHeap(testHeapObjectKeyFunc, compareInts)
 	h.Add(mkHeapObj("foo", 10))

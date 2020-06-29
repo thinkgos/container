@@ -12,28 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// Package Stack implements a Stack, which orders elements in a LIFO (last-in-first-out) manner.
+// Package stack implements a Stack, which orders elements in a LIFO (last-in-first-out) manner.
 package stack
 
 import (
 	"container/list"
 )
-
-// Interface is a Stack, which is LIFO (last-in-first-out).
-type Interface interface {
-	// Len returns the number of elements in the collection.
-	Len() int
-	// IsEmpty returns true if this container contains no elements.
-	IsEmpty() bool
-	// Clear initializes or clears all of the elements from this container.
-	Clear()
-	// Push pushes an element into this Stack.
-	Push(interface{})
-	// Pop pops the element on the top of this Stack.
-	Pop() interface{}
-	// Peek retrieves, but does not remove, the element on the top of this Stack, or return nil if this Stack is empty.
-	Peek() interface{}
-}
 
 // Stack is LIFO.
 type Stack struct {
@@ -67,5 +51,8 @@ func (s *Stack) Pop() interface{} {
 
 // Peek retrieves, but does not remove, the element on the top of this Stack, or return nil if this Stack is empty.
 func (s *Stack) Peek() interface{} {
-	return s.l.Front().Value
+	if e := s.l.Front(); e != nil {
+		return e.Value
+	}
+	return nil
 }
