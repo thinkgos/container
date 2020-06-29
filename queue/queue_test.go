@@ -83,3 +83,11 @@ func TestQueueInit(t *testing.T) {
 
 	assert.Equal(t, 0, q.Len())
 }
+
+func BenchmarkQueue(b *testing.B) {
+	q := New()
+	for i := 0; i < b.N; i++ {
+		q.Add(1)
+		q.Poll()
+	}
+}

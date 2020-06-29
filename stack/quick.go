@@ -34,8 +34,8 @@ func (s *QuickStack) Pop() interface{} {
 
 // Peek retrieves, but does not remove, the element on the top of this QuickStack, or return nil if this QuickStack is empty.
 func (s *QuickStack) Peek() interface{} {
-	if length := len(s.items); length > 0 {
-		return s.items[length-1]
+	if len(s.items) > 0 {
+		return s.items[len(s.items)-1]
 	}
 	return nil
 }
