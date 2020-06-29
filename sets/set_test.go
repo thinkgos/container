@@ -17,6 +17,7 @@ limitations under the License.
 package sets
 
 import (
+	"reflect"
 	"testing"
 )
 
@@ -74,7 +75,28 @@ func TestSet(t *testing.T) {
 	// improve cover
 	s2 = SetKey(map[interface{}]interface{}{1: "1", 2: "2", 3: "3"})
 	s2.UnsortedList()
-	s2.List()
+
+	s3 := New(WithComparator(&myInt{}))
+	s3.Insert([]interface{}{15, 19, 12, 8, 13}...)
+
+	lists := s3.List()
+	if !reflect.DeepEqual(lists, []interface{}{8, 12, 13, 15, 19}) {
+		t.Errorf("Unexpected list: %#v", lists)
+	}
+}
+
+type myInt struct{}
+
+// Compare returns reverse order
+func (i myInt) Compare(v1, v2 interface{}) int {
+	i1, i2 := v1.(int), v2.(int)
+	if i1 < i2 {
+		return 1
+	}
+	if i1 > i2 {
+		return -1
+	}
+	return 0
 }
 
 func TestSetDeleteMultiples(t *testing.T) {
