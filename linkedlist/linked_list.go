@@ -59,18 +59,33 @@ func (sf *LinkedList) Len() int {
 	return sf.l.Len()
 }
 
+// Push inserts a new element e with value v at the back of list l.
+func (sf *LinkedList) Push(v interface{}) {
+	sf.l.PushBack(v)
+}
+
 // PushFront inserts a new element e with value v at the front of list l
-func (sf *LinkedList) PushFront(items ...interface{}) {
-	for _, item := range items {
-		sf.l.PushFront(item)
-	}
+func (sf *LinkedList) PushFront(v interface{}) {
+	sf.l.PushFront(v)
 }
 
 // PushBack inserts a new element e with value v at the back of list l.
-func (sf *LinkedList) PushBack(items ...interface{}) {
-	for _, item := range items {
-		sf.l.PushBack(item)
+func (sf *LinkedList) PushBack(v interface{}) {
+	sf.l.PushBack(v)
+}
+
+// Add add to the index of the list with value
+func (sf *LinkedList) Add(index int, val interface{}) error {
+	if index < 0 || index > sf.Len() {
+		return fmt.Errorf("Index out of range, index: %d, len: %d", index, sf.Len())
 	}
+
+	if index == sf.Len() {
+		sf.l.PushBack(val)
+	} else {
+		sf.l.InsertBefore(val, sf.getElement(index))
+	}
+	return nil
 }
 
 // PushFrontList inserts a copy of an other list at the front of list l.
@@ -85,94 +100,35 @@ func (sf *LinkedList) PushBackList(other *LinkedList) {
 	sf.l.PushBackList(other.l)
 }
 
-// InsertBefore inserts a new element e with value v immediately before mark and returns e.
-// If mark is not an element of l, the list is not modified.
-// The mark must not be nil.
-func (sf *LinkedList) InsertBefore(v interface{}, mark *list.Element) {
-	sf.l.InsertBefore(v, mark)
+// Poll return the front element value and then remove from list
+func (sf *LinkedList) Poll() interface{} {
+	return sf.PollFront()
 }
 
-// InsertAfter inserts a new element e with value v immediately after mark and returns e.
-// If mark is not an element of l, the list is not modified.
-// The mark must not be nil.
-func (sf *LinkedList) InsertAfter(v interface{}, mark *list.Element) {
-	sf.l.InsertAfter(v, mark)
-}
-
-// MoveToFront moves element e to the front of list l.
-// If e is not an element of l, the list is not modified.
-// The element must not be nil.
-func (sf *LinkedList) MoveToFront(e *list.Element) {
-	sf.l.MoveToFront(e)
-}
-
-// MoveToBack moves element e to the back of list l.
-// If e is not an element of l, the list is not modified.
-// The element must not be nil.
-func (sf *LinkedList) MoveToBack(e *list.Element) {
-	sf.l.MoveToBack(e)
-}
-
-// MoveBefore moves element e to its new position before mark.
-// If e or mark is not an element of l, or e == mark, the list is not modified.
-// The element and mark must not be nil.
-func (sf *LinkedList) MoveBefore(e, mark *list.Element) {
-	sf.l.MoveBefore(e, mark)
-}
-
-// MoveAfter moves element e to its new position after mark.
-// If e or mark is not an element of l, or e == mark, the list is not modified.
-// The element and mark must not be nil.
-func (sf *LinkedList) MoveAfter(e, mark *list.Element) {
-	sf.l.MoveAfter(e, mark)
-}
-
-// Remove removes e from l if e is an element of list l.
-// It returns the element value e.Value.
-// The element must not be nil.
-func (sf *LinkedList) Remove(e *list.Element) interface{} {
-	return sf.l.Remove(e)
-}
-
-// IsEmpty returns the list l is empty or not
-func (sf *LinkedList) IsEmpty() bool {
-	return sf.l.Len() == 0
-}
-
-// AddTo add to the index of the list with value
-func (sf *LinkedList) AddTo(index int, val interface{}) error {
-	if index < 0 || index > sf.Len() {
-		return fmt.Errorf("Index out of range, index: %d, len: %d", index, sf.Len())
-	}
-
-	if index == sf.Len() {
-		sf.PushBack(val)
-	} else {
-		sf.InsertBefore(val, sf.getElement(index))
+// PollFront return the front element value and then remove from list
+func (sf *LinkedList) PollFront() interface{} {
+	e := sf.l.Front()
+	if e != nil {
+		return sf.l.Remove(e)
 	}
 	return nil
 }
 
-// Contains contains the value
-func (sf *LinkedList) Contains(val interface{}) bool {
-	return sf.indexOf(val) >= 0
-}
-
-// Get get the index in the list.
-func (sf *LinkedList) Get(index int) (interface{}, error) {
-	if index < 0 || index >= sf.Len() {
-		return nil, fmt.Errorf("Index out of range, index:%d, len:%d", index, sf.Len())
+// PollBack return the back element value and then remove from list
+func (sf *LinkedList) PollBack() interface{} {
+	e := sf.l.Back()
+	if e != nil {
+		return sf.l.Remove(e)
 	}
-
-	return sf.getElement(index).Value, nil
+	return nil
 }
 
 // RemoveWithIndex remove the index in the list
-func (sf *LinkedList) RemoveWithIndex(index int) (interface{}, error) {
+func (sf *LinkedList) Remove(index int) (interface{}, error) {
 	if index < 0 || index >= sf.Len() {
 		return nil, fmt.Errorf("Index out of range, index:%d, len:%d", index, sf.Len())
 	}
-	return sf.Remove(sf.getElement(index)), nil
+	return sf.l.Remove(sf.getElement(index)), nil
 }
 
 // RemoveWithValue remove the value in the list
@@ -183,11 +139,44 @@ func (sf *LinkedList) RemoveWithValue(val interface{}) bool {
 
 	for e := sf.l.Front(); e != nil; e = e.Next() {
 		if sf.compare(val, e.Value) {
-			sf.Remove(e)
+			sf.l.Remove(e)
 			return true
 		}
 	}
 	return false
+}
+
+// IsEmpty returns the list l is empty or not
+func (sf *LinkedList) IsEmpty() bool {
+	return sf.l.Len() == 0
+}
+
+// Contains contains the value
+func (sf *LinkedList) Contains(val interface{}) bool {
+	return sf.indexOf(val) >= 0
+}
+
+// Get get the index in the list.
+func (sf *LinkedList) Get(index int) (interface{}, error) {
+	if index < 0 || index >= sf.Len() {
+		return nil, fmt.Errorf("Index out of range, index: %d, len: %d", index, sf.Len())
+	}
+	return sf.getElement(index).Value, nil
+}
+
+// Peek return the front element value
+func (sf *LinkedList) Peek() interface{} {
+	return sf.PeekFront()
+}
+
+// PeekFront return the front element value
+func (sf *LinkedList) PeekFront() interface{} {
+	return sf.l.Front().Value
+}
+
+// PeekBack return the back element value
+func (sf *LinkedList) PeekBack() interface{} {
+	return sf.l.Back().Value
 }
 
 // Iterator iterator the list
@@ -215,12 +204,14 @@ func (sf *LinkedList) Sort(reverse ...bool) {
 	}
 
 	// get all the Values and sort the data
-	vals := sf.Values()
-	comparator.Sort(vals, sf.cmp, reverse...)
+	vs := sf.Values()
+	comparator.Sort(vs, sf.cmp, reverse...)
 
 	// clear the linked list and push it back
 	sf.Clear()
-	sf.PushBack(vals...)
+	for i := 0; i < len(vs); i++ {
+		sf.PushBack(vs[i])
+	}
 }
 
 // Values get all the values in the list

@@ -8,7 +8,7 @@ import (
 )
 
 func checkList(t *testing.T, l *LinkedList, es []interface{}) {
-	require.Equal(t, len, l.Len())
+	require.Equal(t, len(es), l.Len())
 	for i, e := 0, l.l.Front(); e != nil; e = e.Next() {
 		assert.Equal(t, es[i], e.Value.(int))
 		i++
@@ -18,17 +18,19 @@ func checkList(t *testing.T, l *LinkedList, es []interface{}) {
 func TestLinkedListLen(t *testing.T) {
 	l := New()
 
-	l.PushBack(5, 6, 7)
+	l.PushBack(5)
+	l.PushBack(6)
+	l.PushBack(7)
 	assert.Equal(t, 3, l.Len())
 
 	// remove the element at the position 1
-	v, err := l.RemoveWithIndex(1)
+	v, err := l.Remove(1)
 	assert.Nil(t, err)
 	assert.Equal(t, 6, v)
 	assert.Equal(t, 2, l.Len())
 	assert.False(t, l.IsEmpty())
 
-	v, err = l.RemoveWithIndex(100)
+	v, err = l.Remove(100)
 	assert.NotNil(t, err)
 	assert.Nil(t, v)
 
@@ -40,11 +42,15 @@ func TestLinkedListLen(t *testing.T) {
 
 func TestLinkedListValue(t *testing.T) {
 	l := New()
-
-	l.PushBack(5, 7)
+	l.Push(5)
+	l.PushBack(7)
 	l.PushFront(6)
 
-	err := l.AddTo(2, 8)
+	assert.Equal(t, 6, l.Peek())
+	assert.Equal(t, 6, l.PeekFront())
+	assert.Equal(t, 7, l.PeekBack())
+
+	err := l.Add(2, 8)
 	assert.Nil(t, err)
 
 	v, err := l.Get(2)
@@ -75,17 +81,24 @@ func TestLinkedListValue(t *testing.T) {
 	// check length at last
 	assert.Equal(t, 3, l.Len())
 
+	assert.Equal(t, 6, l.Poll())
+	assert.Equal(t, 7, l.PollBack())
+	assert.Equal(t, 5, l.PollBack())
+
+	assert.Nil(t, l.PollFront())
+	assert.Nil(t, l.PollBack())
+
 	l.Clear()
 
 	// nothing remove
 	assert.False(t, l.RemoveWithValue(8))
-	err = l.AddTo(0, 1)
+	err = l.Add(0, 1)
 	assert.Nil(t, err)
 
 	// invalid index
-	err = l.AddTo(-1, 1)
+	err = l.Add(-1, 1)
 	assert.NotNil(t, err)
-	err = l.AddTo(l.Len()+1, 1)
+	err = l.Add(l.Len()+1, 1)
 	assert.NotNil(t, err)
 }
 
@@ -108,7 +121,9 @@ func TestUserCompare(t *testing.T) {
 func TestLinkedListIterator(t *testing.T) {
 	l := New()
 	items := []int{5, 6, 7}
-	l.PushBack(5, 6, 7)
+	l.PushBack(5)
+	l.PushBack(6)
+	l.PushBack(7)
 	idx := 0
 	l.Iterator(func(v interface{}) bool {
 		assert.Equal(t, items[idx], v)
@@ -119,19 +134,18 @@ func TestLinkedListIterator(t *testing.T) {
 }
 
 func TestLinkedListReverseIterator(t *testing.T) {
-	ll := New()
-
 	items := []int{5, 6, 7}
-
-	ll.PushBack(5, 6, 7)
-
+	l := New()
+	l.PushBack(5)
+	l.PushBack(6)
+	l.PushBack(7)
 	idx := len(items) - 1
-	ll.ReverseIterator(func(v interface{}) bool {
+	l.ReverseIterator(func(v interface{}) bool {
 		assert.Equal(t, items[idx], v)
 		idx--
 		return true
 	})
-	ll.ReverseIterator(nil)
+	l.ReverseIterator(nil)
 }
 
 func TestLinkedListSort(t *testing.T) {
