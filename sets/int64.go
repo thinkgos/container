@@ -191,8 +191,7 @@ func (s Int64) PopAny() (int64, bool) {
 		s.Delete(key)
 		return key, true
 	}
-	var zeroValue int64
-	return zeroValue, false
+	return 0, false
 }
 
 // Len returns the size of the set.

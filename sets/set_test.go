@@ -56,6 +56,25 @@ func TestSet(t *testing.T) {
 	if !s.IsSuperset(s2) {
 		t.Errorf("Missing contents: %#v", s)
 	}
+	_, ok := s2.PopAny()
+	if !ok {
+		t.Errorf("Unexpected status: %#v", ok)
+	}
+	s2 = New()
+	if s2.Len() != 0 {
+		t.Errorf("Expected len=0: %d", s2.Len())
+	}
+	v, ok := s2.PopAny()
+	if ok {
+		t.Errorf("Unexpected status: %#v", ok)
+	}
+	if v != nil {
+		t.Errorf("Unexpected value: %#v", v)
+	}
+	// improve cover
+	s2 = SetKey(map[interface{}]interface{}{1: "1", 2: "2", 3: "3"})
+	s2.UnsortedList()
+	s2.List()
 }
 
 func TestSetDeleteMultiples(t *testing.T) {

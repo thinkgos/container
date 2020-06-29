@@ -57,6 +57,24 @@ func TestUint16Set(t *testing.T) {
 	if !s.IsSuperset(s2) {
 		t.Errorf("Missing contents: %#v", s)
 	}
+	_, ok := s2.PopAny()
+	if !ok {
+		t.Errorf("Unexpected status: %#v", ok)
+	}
+	s2 = NewUint16()
+	if s2.Len() != 0 {
+		t.Errorf("Expected len=0: %d", len(s2))
+	}
+	v, ok := s2.PopAny()
+	if ok {
+		t.Errorf("Unexpected status: %#v", ok)
+	}
+	if v != 0 {
+		t.Errorf("Unexpected value: %#v", v)
+	}
+	// improve cover
+	s2 = Uint16KeySet(map[uint16]interface{}{1: "1", 2: "2", 3: "3"})
+	s2.UnsortedList()
 }
 
 func TestUint16SetDeleteMultiples(t *testing.T) {
