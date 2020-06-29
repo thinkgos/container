@@ -1,4 +1,4 @@
-package linkedlist
+package array
 
 import (
 	"testing"
@@ -7,15 +7,14 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func checkList(t *testing.T, l *LinkedList, es []interface{}) {
+func checkList(t *testing.T, l *List, es []interface{}) {
 	require.Equal(t, len(es), l.Len())
-	for i, e := 0, l.l.Front(); e != nil; e = e.Next() {
-		assert.Equal(t, es[i], e.Value.(int))
-		i++
+	for i := 0; i < l.Len(); i++ {
+		assert.Equal(t, es[i], l.items[i])
 	}
 }
 
-func TestLinkedListLen(t *testing.T) {
+func TestArrayListLen(t *testing.T) {
 	l := New()
 
 	l.PushBack(5)
@@ -40,7 +39,7 @@ func TestLinkedListLen(t *testing.T) {
 	assert.True(t, l.IsEmpty())
 }
 
-func TestLinkedListValue(t *testing.T) {
+func TestArrayListValue(t *testing.T) {
 	l := New()
 	l.Push(5)
 	l.PushBack(7)
@@ -106,22 +105,22 @@ func TestLinkedListValue(t *testing.T) {
 }
 
 func TestUserCompare(t *testing.T) {
-	ll := New(WithComparator(&linkedListNode{}))
-	ll.PushBack(&linkedListNode{age: 32})
-	ll.PushBack(&linkedListNode{age: 20})
-	ll.PushBack(&linkedListNode{age: 27})
-	ll.PushBack(&linkedListNode{age: 25})
+	ll := New(WithComparator(&arrayListNode{}))
+	ll.PushBack(&arrayListNode{age: 32})
+	ll.PushBack(&arrayListNode{age: 20})
+	ll.PushBack(&arrayListNode{age: 27})
+	ll.PushBack(&arrayListNode{age: 25})
 
-	idx := ll.indexOf(&linkedListNode{age: 20})
+	idx := ll.indexOf(&arrayListNode{age: 20})
 	assert.Equal(t, 1, idx)
 
-	ok := ll.RemoveWithValue(&linkedListNode{age: 20})
+	ok := ll.RemoveWithValue(&arrayListNode{age: 20})
 	assert.True(t, ok)
 	assert.Equal(t, 3, ll.Len())
 
 }
 
-func TestLinkedListIterator(t *testing.T) {
+func TestArrayListIterator(t *testing.T) {
 	l := New()
 	items := []int{5, 6, 7}
 	l.PushBack(5)
@@ -136,7 +135,7 @@ func TestLinkedListIterator(t *testing.T) {
 	l.Iterator(nil)
 }
 
-func TestLinkedListReverseIterator(t *testing.T) {
+func TestArrayListReverseIterator(t *testing.T) {
 	items := []int{5, 6, 7}
 	l := New()
 	l.PushBack(5)
@@ -151,7 +150,7 @@ func TestLinkedListReverseIterator(t *testing.T) {
 	l.ReverseIterator(nil)
 }
 
-func TestLinkedListSort(t *testing.T) {
+func TestArrayListSort(t *testing.T) {
 	ll := New()
 
 	expect := []int{4, 6, 7, 15}
@@ -180,6 +179,7 @@ func TestLinkedListSort(t *testing.T) {
 	}
 }
 
+// fmt.Printf("%#v\r\n", l.items)
 func TestExtending(t *testing.T) {
 	l1 := New()
 	l2 := New()
@@ -225,13 +225,13 @@ func TestExtending(t *testing.T) {
 	checkList(t, l1, []interface{}{1, 2, 3})
 }
 
-func TestLinkdedListComparatorSort(t *testing.T) {
-	expect := []*linkedListNode{{age: 20}, {age: 25}, {age: 27}, {age: 32}}
-	ll := New(WithComparator(&linkedListNode{}))
-	ll.PushBack(&linkedListNode{age: 32})
-	ll.PushBack(&linkedListNode{age: 20})
-	ll.PushBack(&linkedListNode{age: 27})
-	ll.PushBack(&linkedListNode{age: 25})
+func TestArrayListComparatorSort(t *testing.T) {
+	expect := []*arrayListNode{{age: 20}, {age: 25}, {age: 27}, {age: 32}}
+	ll := New(WithComparator(&arrayListNode{}))
+	ll.PushBack(&arrayListNode{age: 32})
+	ll.PushBack(&arrayListNode{age: 20})
+	ll.PushBack(&arrayListNode{age: 27})
+	ll.PushBack(&arrayListNode{age: 25})
 
 	// sort
 	ll.Sort()
@@ -258,12 +258,12 @@ func TestLinkdedListComparatorSort(t *testing.T) {
 	assert.Equal(t, []interface{}{}, value)
 }
 
-type linkedListNode struct {
+type arrayListNode struct {
 	age int
 }
 
-func (aln *linkedListNode) Compare(v1, v2 interface{}) int {
-	n1, n2 := v1.(*linkedListNode), v2.(*linkedListNode)
+func (aln *arrayListNode) Compare(v1, v2 interface{}) int {
+	n1, n2 := v1.(*arrayListNode), v2.(*arrayListNode)
 
 	if n1.age < n2.age {
 		return -1

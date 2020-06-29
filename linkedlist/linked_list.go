@@ -19,6 +19,7 @@ import (
 	"container/list"
 	"fmt"
 
+	"github.com/thinkgos/container/array"
 	"github.com/thinkgos/container/comparator"
 )
 
@@ -31,6 +32,8 @@ type LinkedList struct {
 
 // Option option for New
 type Option func(l *LinkedList)
+
+var _ array.Interface = (*LinkedList)(nil)
 
 // WithComparator with user's Comparator
 func WithComparator(cmp comparator.Comparator) Option {
@@ -48,31 +51,24 @@ func New(opts ...Option) *LinkedList {
 	return l
 }
 
-// Clear initializes or clears list l.
-func (sf *LinkedList) Clear() {
-	sf.l.Init()
-}
-
 // Len returns the number of elements of list l.
 // The complexity is O(1).
-func (sf *LinkedList) Len() int {
-	return sf.l.Len()
-}
+func (sf *LinkedList) Len() int { return sf.l.Len() }
+
+// IsEmpty returns the list l is empty or not
+func (sf *LinkedList) IsEmpty() bool { return sf.l.Len() == 0 }
+
+// Clear initializes or clears list l.
+func (sf *LinkedList) Clear() { sf.l.Init() }
 
 // Push inserts a new element e with value v at the back of list l.
-func (sf *LinkedList) Push(v interface{}) {
-	sf.l.PushBack(v)
-}
+func (sf *LinkedList) Push(v interface{}) { sf.l.PushBack(v) }
 
 // PushFront inserts a new element e with value v at the front of list l
-func (sf *LinkedList) PushFront(v interface{}) {
-	sf.l.PushFront(v)
-}
+func (sf *LinkedList) PushFront(v interface{}) { sf.l.PushFront(v) }
 
 // PushBack inserts a new element e with value v at the back of list l.
-func (sf *LinkedList) PushBack(v interface{}) {
-	sf.l.PushBack(v)
-}
+func (sf *LinkedList) PushBack(v interface{}) { sf.l.PushBack(v) }
 
 // Add add to the index of the list with value
 func (sf *LinkedList) Add(index int, val interface{}) error {
@@ -146,16 +142,6 @@ func (sf *LinkedList) RemoveWithValue(val interface{}) bool {
 	return false
 }
 
-// IsEmpty returns the list l is empty or not
-func (sf *LinkedList) IsEmpty() bool {
-	return sf.l.Len() == 0
-}
-
-// Contains contains the value
-func (sf *LinkedList) Contains(val interface{}) bool {
-	return sf.indexOf(val) >= 0
-}
-
 // Get get the index in the list.
 func (sf *LinkedList) Get(index int) (interface{}, error) {
 	if index < 0 || index >= sf.Len() {
@@ -171,12 +157,18 @@ func (sf *LinkedList) Peek() interface{} {
 
 // PeekFront return the front element value
 func (sf *LinkedList) PeekFront() interface{} {
-	return sf.l.Front().Value
+	if e := sf.l.Front(); e != nil {
+		return e.Value
+	}
+	return nil
 }
 
 // PeekBack return the back element value
 func (sf *LinkedList) PeekBack() interface{} {
-	return sf.l.Back().Value
+	if e := sf.l.Back(); e != nil {
+		return e.Value
+	}
+	return nil
 }
 
 // Iterator iterator the list
@@ -197,6 +189,11 @@ func (sf *LinkedList) ReverseIterator(cb func(interface{}) bool) {
 	}
 }
 
+// Contains contains the value
+func (sf *LinkedList) Contains(val interface{}) bool {
+	return val != nil && sf.indexOf(val) >= 0
+}
+
 // Sort sort the list
 func (sf *LinkedList) Sort(reverse ...bool) {
 	if sf.Len() < 2 {
@@ -214,7 +211,7 @@ func (sf *LinkedList) Sort(reverse ...bool) {
 	}
 }
 
-// Values get all the values in the list
+// Values get a copy of all the values in the list
 func (sf *LinkedList) Values() []interface{} {
 	if sf.Len() == 0 {
 		return []interface{}{}

@@ -152,7 +152,7 @@ func (f *FIFO) HasSynced() bool {
 	return f.populated && f.initialPopulationCount == 0
 }
 
-// Push inserts an item, and puts it in the queue. The item is only enqueued
+// Add inserts an item, and puts it in the queue. The item is only enqueued
 // if it doesn't already exist in the set.
 func (f *FIFO) Add(obj interface{}) error {
 	id, err := f.keyFunc(obj)

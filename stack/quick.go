@@ -7,7 +7,7 @@ type QuickStack struct {
 
 var _ Interface = (*QuickStack)(nil)
 
-// New creates a QuickStack. which implement interface stack.Interface
+// NewQuickStack creates a QuickStack. which implement interface stack.Interface
 func NewQuickStack() *QuickStack { return &QuickStack{} }
 
 // Len returns the length of this priority queue.
