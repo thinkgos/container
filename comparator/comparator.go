@@ -22,7 +22,7 @@ import (
 
 // Compare compares its two arguments if they have the same type and are comparable, otherwise returns an error in the second return value.
 // It returns a negative integer, zero, or a positive integer as the first argument is less than, equal to, or greater than the second.
-func Compare(v1 interface{}, v2 interface{}) int {
+func Compare(v1, v2 interface{}) int {
 	if nil == v1 && nil == v2 {
 		return 0
 	}
@@ -138,21 +138,21 @@ func Compare(v1 interface{}, v2 interface{}) int {
 		}
 	case reflect.Struct:
 		// compare time
-		timeCmpRet, isBothTime := compareTime(v1, v2)
+		timeCmpRet, isBothTime := CompareTime(v1, v2)
 		if isBothTime {
 			return timeCmpRet
 		}
-		panic("please define a customized sort.Comparator for your struct")
+		panic("please define a customized comparator.Comparator for your struct")
 	default:
-		panic(fmt.Sprintf("type '%s' can't be compared,please define a customized sort.Comparator for your struct", k1))
+		panic(fmt.Sprintf("type '%s' can't be compared,please define a customized comparator.Comparator for your struct", k1))
 	}
 
 	return cmpRet
 }
 
-// compareTime compares its two arguments if both of them are time.Time, and returns true
+// CompareTime compares its two arguments if both of them are time.Time, and returns true
 // and the comparison result; otherwise return false in the first return argument.
-func compareTime(v1 interface{}, v2 interface{}) (int, bool) {
+func CompareTime(v1, v2 interface{}) (int, bool) {
 	t1, ok1 := v1.(time.Time)
 	t2, ok2 := v2.(time.Time)
 	if ok1 && ok2 {
