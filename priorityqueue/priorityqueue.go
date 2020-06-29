@@ -83,9 +83,7 @@ func (sf *Queue) Clear() { sf.ctn.Items = make([]interface{}, 0) }
 
 // Add inserts the specified element into this priority queue.
 func (sf *Queue) Add(items ...interface{}) {
-	for _, item := range items {
-		sf.ctn.Items = append(sf.ctn.Items, item)
-	}
+	sf.ctn.Items = append(sf.ctn.Items, items...)
 	heap.Init(sf.ctn)
 }
 
