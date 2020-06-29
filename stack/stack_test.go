@@ -6,7 +6,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestStackSize(t *testing.T) {
+func TestStackLen(t *testing.T) {
 	s := New()
 	s.Push(5)
 	s.Push(6)

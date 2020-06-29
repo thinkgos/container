@@ -12,14 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// Package stack implements a stack, which orders elements in a LIFO (last-in-first-out) manner.
+// Package Stack implements a Stack, which orders elements in a LIFO (last-in-first-out) manner.
 package stack
 
 import (
 	"container/list"
 )
 
-// Interface is a stack, which is LIFO (last-in-first-out).
+// Interface is a Stack, which is LIFO (last-in-first-out).
 type Interface interface {
 	// Len returns the number of elements in the collection.
 	Len() int
@@ -27,49 +27,45 @@ type Interface interface {
 	IsEmpty() bool
 	// Clear initializes or clears all of the elements from this container.
 	Clear()
-	// Push pushes an element into this stack.
-	Push(val interface{})
-	// Pop pops the element on the top of this stack.
+	// Push pushes an element into this Stack.
+	Push(interface{})
+	// Pop pops the element on the top of this Stack.
 	Pop() interface{}
-	// Peek retrieves, but does not remove, the element on the top of this stack, or return nil if this stack is empty.
+	// Peek retrieves, but does not remove, the element on the top of this Stack, or return nil if this Stack is empty.
 	Peek() interface{}
 }
 
-// stack is LIFO.
-type stack struct {
+// Stack is LIFO.
+type Stack struct {
 	l *list.List
 }
 
-// New creates a stack.
-func New() Interface {
-	return &stack{list.New()}
-}
+var _ Interface = (*Stack)(nil)
 
-func (s *stack) Len() int {
-	return s.l.Len()
-}
+// New creates a Stack. which implement interface stack.Interface
+func New() *Stack { return &Stack{list.New()} }
 
-// IsEmpty returns true if this stack contains no elements.
-func (s *stack) IsEmpty() bool {
-	return s.l.Len() == 0
-}
+// Len returns the length of this priority queue.
+func (s *Stack) Len() int { return s.l.Len() }
 
-func (s *stack) Push(val interface{}) {
-	s.l.PushFront(val)
-}
+// IsEmpty returns true if this Stack contains no elements.
+func (s *Stack) IsEmpty() bool { return s.l.Len() == 0 }
 
-func (s *stack) Pop() interface{} {
-	if ele := s.l.Front(); ele != nil {
-		return s.l.Remove(ele)
+// Clear removes all the elements from this Stack.
+func (s *Stack) Clear() { s.l.Init() }
+
+// Push pushes an element into this Stack.
+func (s *Stack) Push(val interface{}) { s.l.PushFront(val) }
+
+// Pop pops the element on the top of this Stack.
+func (s *Stack) Pop() interface{} {
+	if e := s.l.Front(); e != nil {
+		return s.l.Remove(e)
 	}
 	return nil
 }
 
-func (s *stack) Peek() interface{} {
+// Peek retrieves, but does not remove, the element on the top of this Stack, or return nil if this Stack is empty.
+func (s *Stack) Peek() interface{} {
 	return s.l.Front().Value
-}
-
-// Clear removes all the elements from this stack.
-func (s *stack) Clear() {
-	s.l.Init()
 }
