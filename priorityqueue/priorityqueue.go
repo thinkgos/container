@@ -1,0 +1,113 @@
+// Package priorityqueue implements an unbounded priority queue based on a priority heap.
+// The elements of the priority queue are ordered according to their natural ordering, or by a Comparator provided at PriorityQueue construction time.
+package priorityqueue
+
+import (
+	"container/heap"
+
+	"github.com/thinkgos/container/comparator"
+	"github.com/thinkgos/container/queue"
+)
+
+// Interface is a type of priority queue, and Queue implement this interface.
+type Interface interface {
+	queue.Interface
+
+	// Contains returns true if this queue contains the specified element.
+	Contains(val interface{}) bool
+	// Remove a single instance of the specified element from this queue, if it is present.
+	// It returns false if the target value isn't present, otherwise returns true.
+	Remove(val interface{}) bool
+}
+
+// Queue represents an unbounded priority queue based on a priority heap.
+// It implements heap.Interface.
+type Queue struct {
+	ctn *comparator.Container
+}
+
+type Option func(q *Queue)
+
+var _ Interface = (*Queue)(nil)
+
+func WithComparator(c comparator.Comparator) Option {
+	return func(q *Queue) {
+		q.ctn.Cmp = c
+	}
+}
+
+func WithMaxHeap(b bool) Option {
+	return func(q *Queue) {
+		q.ctn.Reverse = b
+	}
+}
+
+// New initializes and returns an Queue, default mini heap
+func New(opts ...Option) *Queue {
+	q := &Queue{
+		ctn: &comparator.Container{
+			Items:   []interface{}{},
+			Reverse: false,
+		},
+	}
+	for _, opt := range opts {
+		opt(q)
+	}
+	return q
+}
+
+// Len returns the length of this priority queue.
+func (sf *Queue) Len() int { return sf.ctn.Len() }
+
+// IsEmpty returns true if this list contains no elements.
+func (sf *Queue) IsEmpty() bool { return sf.Len() == 0 }
+
+// Clear removes all of the elements from this priority queue.
+func (sf *Queue) Clear() { sf.ctn.Items = make([]interface{}, 0) }
+
+// Add inserts the specified element into this priority queue.
+func (sf *Queue) Add(items ...interface{}) {
+	for _, v := range items {
+		sf.ctn.Items = append(sf.ctn.Items, v)
+	}
+	heap.Init(sf.ctn)
+}
+
+// Peek retrieves, but does not remove, the head of this queue, or return nil if this queue is empty.
+func (sf *Queue) Peek() interface{} {
+	if sf.Len() > 0 {
+		return sf.ctn.Items[0]
+	}
+	return nil
+}
+
+// Poll retrieves and removes the head of the this queue, or return nil if this queue is empty.
+func (sf *Queue) Poll() interface{} {
+	if sf.Len() > 0 {
+		return heap.Pop(sf.ctn)
+	}
+	return nil
+}
+
+func (sf *Queue) Contains(val interface{}) bool {
+	return sf.indexOf(val) >= 0
+}
+
+func (sf *Queue) Remove(val interface{}) bool {
+	if idx := sf.indexOf(val); idx >= 0 {
+		heap.Remove(sf.ctn, idx)
+		return true
+	}
+	return false
+}
+
+func (sf *Queue) indexOf(val interface{}) int {
+	if sf.Len() > 0 && nil != val {
+		for i := 0; i < sf.Len(); i++ {
+			if val == sf.ctn.Items[i] {
+				return i
+			}
+		}
+	}
+	return -1
+}
