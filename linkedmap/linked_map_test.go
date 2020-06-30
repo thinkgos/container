@@ -107,9 +107,9 @@ func TestLinkedMapValue(t *testing.T) {
 	// not found
 	assert.False(t, lm.ContainsValue("haha"))
 
-	// test ContainsKey & ContainsValue
+	// test Contains & ContainsValue
 	for _, k := range keys {
-		assert.True(t, lm.ContainsKey(k))
+		assert.True(t, lm.Contains(k))
 	}
 
 	for _, v := range values {

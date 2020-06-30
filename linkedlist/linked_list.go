@@ -127,8 +127,8 @@ func (sf *LinkedList) Remove(index int) (interface{}, error) {
 	return sf.l.Remove(sf.getElement(index)), nil
 }
 
-// RemoveWithValue remove the value in the list
-func (sf *LinkedList) RemoveWithValue(val interface{}) bool {
+// RemoveValue remove the value in the list
+func (sf *LinkedList) RemoveValue(val interface{}) bool {
 	if sf.Len() == 0 {
 		return false
 	}

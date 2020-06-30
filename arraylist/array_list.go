@@ -147,9 +147,9 @@ func (sf *List) Remove(index int) (interface{}, error) {
 	return val, nil
 }
 
-// RemoveWithValue removes the first occurence of the specified element from this list, if it is present.
+// RemoveValue removes the first occurence of the specified element from this list, if it is present.
 // It returns false if the target value isn't present, otherwise returns true.
-func (sf *List) RemoveWithValue(val interface{}) bool {
+func (sf *List) RemoveValue(val interface{}) bool {
 	if sf.Len() == 0 {
 		return false
 	}

@@ -17,64 +17,9 @@ package linkedmap
 import (
 	"container/list"
 
+	"github.com/thinkgos/container"
 	"github.com/thinkgos/container/comparator"
 )
-
-// Interface is a type of linked map, and LinkedMap implements this interface.
-type Interface interface {
-	// Cap returns the capacity of elements of list l.
-	Cap() int
-	// Len returns the number of elements in the collection.
-	Len() int
-	// IsEmpty returns true if this container contains no elements.
-	IsEmpty() bool
-	// Clear initializes or clears all of the elements from this container.
-	Clear()
-	// Push associates the specified value with the specified key in this map.
-	// If the map previously contained a mapping for the key,
-	// the old value is replaced by the specified value. and then move the item to the back of the list.
-	// If over the cap, it will remove the back item then push new item to back
-	// It returns the previous value associated with the specified key, or nil if there was no mapping for the key.
-	// A nil return can also indicate that the map previously associated nil with the specified key.
-	Push(k, v interface{}) interface{}
-	// PushFront associates the specified value with the specified key in this map.
-	// If the map previously contained a mapping for the key,
-	// the old value is replaced by the specified value. and then move the item to the front of the list.
-	// If over the cap, it will remove the back item then push new item to front
-	// It returns the previous value associated with the specified key, or nil if there was no mapping for the key.
-	// A nil return can also indicate that the map previously associated nil with the specified key.
-	PushFront(k, v interface{}) interface{}
-	// PushBack associates the specified value with the specified key in this map.
-	// If the map previously contained a mapping for the key,
-	// the old value is replaced by the specified value. and then move the item to the back of the list.
-	// If over the cap, it will remove the back item then push new item to back
-	PushBack(k, v interface{}) interface{}
-
-	// Poll removes the first element from this map, which is the head of the list.
-	// It returns the (key, value, true) if the map isn't empty, or (nil, nil, false) if the map is empty.
-	Poll() (interface{}, interface{}, bool)
-	// PollFront return the front element value and then remove from list
-	PollFront() (k interface{}, v interface{}, exist bool)
-	// PollBack removes the last element from this map, which is the tail of the list.
-	// It returns the (key, value, true) if the map isn't empty, or (nil, nil, false) if the map is empty.
-	PollBack() (interface{}, interface{}, bool)
-	// Remove removes the mapping for a key from this map if it is present.
-	// It returns the value to which this map previously associated the key, and true,
-	// or nil and false if the map contained no mapping for the key.
-	Remove(k interface{}) (interface{}, bool)
-	// Get returns the value to which the specified key is mapped, or nil if this map contains no mapping for the key.
-	Get(k interface{}, defaultValue ...interface{}) interface{}
-
-	// ContainsKey returns true if this map contains a mapping for the specified key.
-	ContainsKey(k interface{}) bool
-	// ContainsValue returns true if this map maps one or more keys to the specified value.
-	ContainsValue(v interface{}) bool
-
-	// Iterator returns an iterator over the elements in this map in proper sequence.
-	Iterator(cb func(k interface{}, v interface{}) bool)
-	// ReverseIterator returns an iterator over the elements in this map in reverse sequence as Iterator.
-	ReverseIterator(cb func(k interface{}, v interface{}) bool)
-}
 
 type store struct {
 	key, value interface{}
@@ -88,7 +33,7 @@ type LinkedMap struct {
 	cap  int
 }
 
-var _ Interface = (*LinkedMap)(nil)
+var _ container.LinkedMap = (*LinkedMap)(nil)
 
 // Option option for New
 type Option func(lm *LinkedMap)
@@ -142,9 +87,7 @@ func (sf *LinkedMap) Clear() {
 // If over the cap, it will remove the back item then push new item to back
 // It returns the previous value associated with the specified key, or nil if there was no mapping for the key.
 // A nil return can also indicate that the map previously associated nil with the specified key.
-func (sf *LinkedMap) Push(k, v interface{}) interface{} {
-	return sf.PushBack(k, v)
-}
+func (sf *LinkedMap) Push(k, v interface{}) interface{} { return sf.PushBack(k, v) }
 
 // PushFront associates the specified value with the specified key in this map.
 // If the map previously contained a mapping for the key,
@@ -193,9 +136,7 @@ func (sf *LinkedMap) PushBack(k, v interface{}) interface{} {
 }
 
 // Poll return the front element value and then remove from list
-func (sf *LinkedMap) Poll() (k interface{}, v interface{}, exist bool) {
-	return sf.PollFront()
-}
+func (sf *LinkedMap) Poll() (k interface{}, v interface{}, exist bool) { return sf.PollFront() }
 
 // PollFront return the front element value and then remove from list
 func (sf *LinkedMap) PollFront() (k interface{}, v interface{}, exist bool) {
@@ -232,8 +173,8 @@ func (sf *LinkedMap) Remove(k interface{}) (interface{}, bool) {
 	return nil, false
 }
 
-// ContainsKey returns true if this map contains a mapping for the specified key.
-func (sf *LinkedMap) ContainsKey(k interface{}) bool {
+// Contains returns true if this map contains a mapping for the specified key.
+func (sf *LinkedMap) Contains(k interface{}) bool {
 	_, ok := sf.data[k]
 	return ok
 }

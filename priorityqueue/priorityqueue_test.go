@@ -181,27 +181,22 @@ func TestPQComparator(t *testing.T) {
 	require.True(t, ok)
 	require.True(t, v.name == "john" && v.age == 42)
 
-	// Poll: 1 {"john", 42}
 	v, ok = pq.Poll().(*student)
 	require.True(t, ok)
 	require.True(t, v.name == "john" && v.age == 42)
 
-	// Poll: 2 {"benjamin", 34}
 	v, ok = pq.Poll().(*student)
 	require.True(t, ok)
 	require.True(t, v.name == "benjamin" && v.age == 34)
 
-	// Poll: 3 {"roy", 28}
 	v, ok = pq.Poll().(*student)
 	require.True(t, ok)
 	require.True(t, v.name == "roy" && v.age == 28)
 
-	// Poll: 4 {"moss", 25}
 	v, ok = pq.Poll().(*student)
 	require.True(t, ok)
 	require.True(t, v.name == "moss" && v.age == 25)
 
-	// Poll: 5 {"alice", 21}
 	v, ok = pq.Poll().(*student)
 	require.True(t, ok)
 	require.True(t, v.name == "alice" && v.age == 21)

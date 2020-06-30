@@ -63,11 +63,11 @@ func TestLinkedListValue(t *testing.T) {
 
 	// check an element which doesn't exist
 	assert.False(t, l.Contains(9))
-	assert.False(t, l.RemoveWithValue(9))
+	assert.False(t, l.RemoveValue(9))
 
 	// check element 8
 	assert.False(t, l.Contains(9))
-	assert.True(t, l.RemoveWithValue(8))
+	assert.True(t, l.RemoveValue(8))
 	assert.False(t, l.Contains(9))
 
 	// get out of range
@@ -94,7 +94,7 @@ func TestLinkedListValue(t *testing.T) {
 	assert.Nil(t, l.PeekBack())
 
 	// nothing remove
-	assert.False(t, l.RemoveWithValue(8))
+	assert.False(t, l.RemoveValue(8))
 	err = l.Add(0, 1)
 	assert.Nil(t, err)
 
@@ -115,7 +115,7 @@ func TestUserCompare(t *testing.T) {
 	idx := ll.indexOf(&linkedListNode{age: 20})
 	assert.Equal(t, 1, idx)
 
-	ok := ll.RemoveWithValue(&linkedListNode{age: 20})
+	ok := ll.RemoveValue(&linkedListNode{age: 20})
 	assert.True(t, ok)
 	assert.Equal(t, 3, ll.Len())
 

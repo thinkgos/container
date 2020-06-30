@@ -32,7 +32,7 @@ type Queue struct {
 // Option option for New
 type Option func(q *Queue)
 
-var _ container.PriorityQueue = (*Queue)(nil)
+var _ container.Queue = (*Queue)(nil)
 
 // WithComparator with user's Comparator
 func WithComparator(c comparator.Comparator) Option {
