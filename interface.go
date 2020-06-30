@@ -1,21 +1,49 @@
-// Copyright [2020] [thinkgos]
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-// http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+package container
 
-package array
+// Stack is a Stack interface, which is LIFO (last-in-first-out).
+type Stack interface {
+	// Len returns the number of elements in the collection.
+	Len() int
+	// IsEmpty returns true if this container contains no elements.
+	IsEmpty() bool
+	// Clear initializes or clears all of the elements from this container.
+	Clear()
+	// Push pushes an element into this Stack.
+	Push(interface{})
+	// Pop pops the element on the top of this Stack.
+	Pop() interface{}
+	// Peek retrieves, but does not remove, the element on the top of this Stack, or return nil if this Stack is empty.
+	Peek() interface{}
+}
 
-// Interface is a type of list, both ArrayList and LinkedList implement this interface.
-type Interface interface {
+// Queue is a type of Queue, which is FIFO(first-in-first-out).
+type Queue interface {
+	// Len returns the number of elements in the collection.
+	Len() int
+	// IsEmpty returns true if this container contains no elements.
+	IsEmpty() bool
+	// Clear initializes or clears all of the elements from this container.
+	Clear()
+	// Add inserts an element into the tail of this Queue.
+	Add(interface{})
+	// Peek retrieves, but does not remove, the head of this Queue, or return nil if this Queue is empty.
+	Peek() interface{}
+	// Poll retrieves and removes the head of the this Queue, or return nil if this Queue is empty.
+	Poll() interface{}
+}
+
+// PriorityQueue is a type of priority queue, and Queue implement this interface.
+type PriorityQueue interface {
+	Queue
+	// Contains returns true if this queue contains the specified element.
+	Contains(val interface{}) bool
+	// Remove a single instance of the specified element from this queue, if it is present.
+	// It returns false if the target value isn't present, otherwise returns true.
+	Remove(val interface{})
+}
+
+// List is a type of list, both ArrayList and LinkedList implement this interface.
+type List interface {
 	// Len returns the number of elements in the collection.
 	Len() int
 	// IsEmpty returns true if this container contains no elements.

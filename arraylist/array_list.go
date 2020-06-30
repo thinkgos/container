@@ -12,12 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// Package array implements both an array List.
-package array
+// Package arraylist implements both an array List.
+package arraylist
 
 import (
 	"fmt"
 
+	"github.com/thinkgos/container"
 	"github.com/thinkgos/container/comparator"
 )
 
@@ -31,7 +32,7 @@ type List struct {
 // Option option for New
 type Option func(l *List)
 
-var _ Interface = (*List)(nil)
+var _ container.List = (*List)(nil)
 
 // WithComparator with user's Comparator
 func WithComparator(cmp comparator.Comparator) Option {
@@ -39,8 +40,6 @@ func WithComparator(cmp comparator.Comparator) Option {
 		l.cmp = cmp
 	}
 }
-
-var _ Interface = (*List)(nil)
 
 // New initializes and returns an ArrayList.
 func New(opts ...Option) *List {

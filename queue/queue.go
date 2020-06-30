@@ -14,21 +14,9 @@
 
 package queue
 
-// Interface is a type of Queue, which is FIFO(first-in-first-out).
-type Interface interface {
-	// Len returns the number of elements in the collection.
-	Len() int
-	// IsEmpty returns true if this container contains no elements.
-	IsEmpty() bool
-	// Clear initializes or clears all of the elements from this container.
-	Clear()
-	// Add inserts an element into the tail of this Queue.
-	Add(interface{})
-	// Peek retrieves, but does not remove, the head of this Queue, or return nil if this Queue is empty.
-	Peek() interface{}
-	// Poll retrieves and removes the head of the this Queue, or return nil if this Queue is empty.
-	Poll() interface{}
-}
+import (
+	"github.com/thinkgos/container"
+)
 
 // element is an element of the Queue
 type element struct {
@@ -43,7 +31,7 @@ type Queue struct {
 	length int
 }
 
-var _ Interface = (*Queue)(nil)
+var _ container.Queue = (*Queue)(nil)
 
 // New creates a Queue. which implement queue.Interface
 func New() *Queue { return new(Queue) }

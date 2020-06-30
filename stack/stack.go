@@ -17,6 +17,8 @@ package stack
 
 import (
 	"container/list"
+
+	"github.com/thinkgos/container"
 )
 
 // Stack is LIFO.
@@ -24,7 +26,7 @@ type Stack struct {
 	l *list.List
 }
 
-var _ Interface = (*Stack)(nil)
+var _ container.Stack = (*Stack)(nil)
 
 // New creates a Stack. which implement interface stack.Interface
 func New() *Stack { return &Stack{list.New()} }

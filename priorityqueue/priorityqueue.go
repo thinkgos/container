@@ -19,19 +19,9 @@ package priorityqueue
 import (
 	"container/heap"
 
+	"github.com/thinkgos/container"
 	"github.com/thinkgos/container/comparator"
-	"github.com/thinkgos/container/queue"
 )
-
-// Interface is a type of priority queue, and Queue implement this interface.
-type Interface interface {
-	queue.Interface
-	// Contains returns true if this queue contains the specified element.
-	Contains(val interface{}) bool
-	// Remove a single instance of the specified element from this queue, if it is present.
-	// It returns false if the target value isn't present, otherwise returns true.
-	Remove(val interface{})
-}
 
 // Queue represents an unbounded priority queue based on a priority heap.
 // It implements heap.Interface.
@@ -42,7 +32,7 @@ type Queue struct {
 // Option option for New
 type Option func(q *Queue)
 
-var _ Interface = (*Queue)(nil)
+var _ container.PriorityQueue = (*Queue)(nil)
 
 // WithComparator with user's Comparator
 func WithComparator(c comparator.Comparator) Option {

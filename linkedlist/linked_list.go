@@ -19,7 +19,7 @@ import (
 	"container/list"
 	"fmt"
 
-	"github.com/thinkgos/container/array"
+	"github.com/thinkgos/container"
 	"github.com/thinkgos/container/comparator"
 )
 
@@ -33,7 +33,7 @@ type LinkedList struct {
 // Option option for New
 type Option func(l *LinkedList)
 
-var _ array.Interface = (*LinkedList)(nil)
+var _ container.List = (*LinkedList)(nil)
 
 // WithComparator with user's Comparator
 func WithComparator(cmp comparator.Comparator) Option {

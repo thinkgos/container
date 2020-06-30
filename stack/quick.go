@@ -1,11 +1,15 @@
 package stack
 
+import (
+	"github.com/thinkgos/container"
+)
+
 // QuickStack is quick LIFO stack
 type QuickStack struct {
 	items []interface{}
 }
 
-var _ Interface = (*QuickStack)(nil)
+var _ container.Stack = (*QuickStack)(nil)
 
 // NewQuickStack creates a QuickStack. which implement interface stack.Interface
 func NewQuickStack() *QuickStack { return &QuickStack{} }
