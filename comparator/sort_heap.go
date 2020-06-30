@@ -24,7 +24,7 @@ var (
 	_ sort.Interface = (*Container)(nil)
 )
 
-// Container for sort or heap sort
+// Container for sort or heap sort, it implement sort.Interface and heap.Interface.
 type Container struct {
 	noCopy  noCopy
 	Items   []interface{}
