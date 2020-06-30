@@ -98,6 +98,7 @@ func (sf *Queue) Poll() interface{} {
 	return val
 }
 
+// Contains returns true if this queue contains the specified element.
 func (sf *Queue) Contains(val interface{}) bool {
 	for e := sf.head; e != nil; e = e.next {
 		if sf.compare(val, e.value) {
@@ -107,6 +108,7 @@ func (sf *Queue) Contains(val interface{}) bool {
 	return false
 }
 
+// Remove a single instance of the specified element from this queue, if it is present.
 func (sf *Queue) Remove(val interface{}) {
 	for pre, e := sf.head, sf.head; e != nil; {
 		if sf.compare(val, e.value) {
