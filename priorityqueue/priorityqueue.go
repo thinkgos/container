@@ -73,8 +73,7 @@ func (sf *Queue) Clear() { sf.ctn.Items = make([]interface{}, 0) }
 
 // Add inserts the specified element into this priority queue.
 func (sf *Queue) Add(items interface{}) {
-	sf.ctn.Items = append(sf.ctn.Items, items)
-	heap.Init(sf.ctn)
+	heap.Push(sf.ctn, items)
 }
 
 // Peek retrieves, but does not remove, the head of this queue, or return nil if this queue is empty.
