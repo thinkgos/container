@@ -201,8 +201,9 @@ func heapRemoveTestImpl(t *testing.T, input []interface{}, expected []interface{
 	}
 
 	// call HeapPreRemove
-	heap.Remove(container, index)
-	require.Equal(t, input[len(input)-1], val)
+	v := heap.Remove(container, index)
+	require.Equal(t, v, val)
+	require.Equal(t, nil, input[len(input)-1])
 
 	// Pop all elements from heap one by one
 	for i := 0; i < len(expected); i++ {

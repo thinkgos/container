@@ -64,6 +64,7 @@ func (sf *Container) Pop() interface{} {
 	old := sf.Items
 	n := len(old)
 	x := old[n-1]
+	old[n-1] = nil // should set nil for gc
 	sf.Items = old[:n-1]
 	return x
 }
