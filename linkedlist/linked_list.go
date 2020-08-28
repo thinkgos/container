@@ -23,6 +23,8 @@ import (
 	"github.com/thinkgos/container/comparator"
 )
 
+var _ container.List = (*LinkedList)(nil)
+
 // LinkedList represents a doubly linked list.
 // It implements the interface list.Interface.
 type LinkedList struct {
@@ -32,8 +34,6 @@ type LinkedList struct {
 
 // Option option for New
 type Option func(l *LinkedList)
-
-var _ container.List = (*LinkedList)(nil)
 
 // WithComparator with user's Comparator
 func WithComparator(cmp comparator.Comparator) Option {

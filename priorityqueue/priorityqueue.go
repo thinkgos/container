@@ -23,6 +23,8 @@ import (
 	"github.com/thinkgos/container/comparator"
 )
 
+var _ container.Queue = (*Queue)(nil)
+
 // Queue represents an unbounded priority queue based on a priority heap.
 // It implements heap.Interface.
 type Queue struct {
@@ -32,13 +34,9 @@ type Queue struct {
 // Option option for New
 type Option func(q *Queue)
 
-var _ container.Queue = (*Queue)(nil)
-
 // WithComparator with user's Comparator
 func WithComparator(c comparator.Comparator) Option {
-	return func(q *Queue) {
-		q.ctn.Cmp = c
-	}
+	return func(q *Queue) { q.ctn.Cmp = c }
 }
 
 // WithMaxHeap with max heap

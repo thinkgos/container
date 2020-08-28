@@ -21,6 +21,8 @@ import (
 	"github.com/thinkgos/container/comparator"
 )
 
+var _ container.LinkedMap = (*LinkedMap)(nil)
+
 type store struct {
 	key, value interface{}
 }
@@ -32,8 +34,6 @@ type LinkedMap struct {
 	cmp  comparator.Comparator
 	cap  int
 }
-
-var _ container.LinkedMap = (*LinkedMap)(nil)
 
 // Option option for New
 type Option func(lm *LinkedMap)

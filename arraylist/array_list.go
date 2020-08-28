@@ -22,6 +22,8 @@ import (
 	"github.com/thinkgos/container/comparator"
 )
 
+var _ container.List = (*List)(nil)
+
 // List represents an array list.
 // It implements the interface list.Interface.
 type List struct {
@@ -31,8 +33,6 @@ type List struct {
 
 // Option option for New
 type Option func(l *List)
-
-var _ container.List = (*List)(nil)
 
 // WithComparator with user's Comparator
 func WithComparator(cmp comparator.Comparator) Option {

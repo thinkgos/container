@@ -19,7 +19,9 @@ import (
 	"github.com/thinkgos/container/comparator"
 )
 
-// element is an element of the Queue
+var _ container.Queue = (*Queue)(nil)
+
+// element is an element of the Queue implement with list
 type element struct {
 	next  *element
 	value interface{}
@@ -36,14 +38,8 @@ type Queue struct {
 // Option option for New
 type Option func(q *Queue)
 
-var _ container.Queue = (*Queue)(nil)
-
 // WithComparator with user's Comparator
-func WithComparator(c comparator.Comparator) Option {
-	return func(q *Queue) {
-		q.cmp = c
-	}
-}
+func WithComparator(c comparator.Comparator) Option { return func(q *Queue) { q.cmp = c } }
 
 // New creates a Queue. which implement queue.Interface
 func New(opts ...Option) *Queue {
