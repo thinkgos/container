@@ -21,39 +21,39 @@ import (
 	"github.com/thinkgos/container"
 )
 
-// Stack is LIFO.
-type Stack struct {
-	l *list.List
-}
-
 var _ container.Stack = (*Stack)(nil)
+
+// Stack is LIFO implement list.List
+type Stack struct {
+	ll *list.List
+}
 
 // New creates a Stack. which implement interface stack.Interface
 func New() *Stack { return &Stack{list.New()} }
 
 // Len returns the length of this priority queue.
-func (s *Stack) Len() int { return s.l.Len() }
+func (sf *Stack) Len() int { return sf.ll.Len() }
 
 // IsEmpty returns true if this Stack contains no elements.
-func (s *Stack) IsEmpty() bool { return s.l.Len() == 0 }
+func (sf *Stack) IsEmpty() bool { return sf.ll.Len() == 0 }
 
 // Clear removes all the elements from this Stack.
-func (s *Stack) Clear() { s.l.Init() }
+func (sf *Stack) Clear() { sf.ll.Init() }
 
 // Push pushes an element into this Stack.
-func (s *Stack) Push(val interface{}) { s.l.PushFront(val) }
+func (sf *Stack) Push(val interface{}) { sf.ll.PushFront(val) }
 
 // Pop pops the element on the top of this Stack.
-func (s *Stack) Pop() interface{} {
-	if e := s.l.Front(); e != nil {
-		return s.l.Remove(e)
+func (sf *Stack) Pop() interface{} {
+	if e := sf.ll.Front(); e != nil {
+		return sf.ll.Remove(e)
 	}
 	return nil
 }
 
 // Peek retrieves, but does not remove, the element on the top of this Stack, or return nil if this Stack is empty.
-func (s *Stack) Peek() interface{} {
-	if e := s.l.Front(); e != nil {
+func (sf *Stack) Peek() interface{} {
+	if e := sf.ll.Front(); e != nil {
 		return e.Value
 	}
 	return nil

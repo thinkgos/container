@@ -4,42 +4,47 @@ import (
 	"github.com/thinkgos/container"
 )
 
-// QuickStack is quick LIFO stack
+var _ container.Stack = (*QuickStack)(nil)
+
+// QuickStack is quick LIFO stack implement with slice
 type QuickStack struct {
 	items []interface{}
 }
-
-var _ container.Stack = (*QuickStack)(nil)
 
 // NewQuickStack creates a QuickStack. which implement interface stack.Interface
 func NewQuickStack() *QuickStack { return &QuickStack{} }
 
 // Len returns the length of this priority queue.
-func (s *QuickStack) Len() int { return len(s.items) }
+func (sf *QuickStack) Len() int { return len(sf.items) }
 
 // IsEmpty returns true if this QuickStack contains no elements.
-func (s *QuickStack) IsEmpty() bool { return len(s.items) == 0 }
+func (sf *QuickStack) IsEmpty() bool { return len(sf.items) == 0 }
 
 // Clear removes all the elements from this QuickStack.
-func (s *QuickStack) Clear() { s.items = nil }
+func (sf *QuickStack) Clear() {
+	if len(sf.items) > 0 {
+		sf.items = sf.items[:0]
+	}
+}
 
-// Push pushes an element into this QuickStack.
-func (s *QuickStack) Push(val interface{}) { s.items = append(s.items, val) }
+// Push push an element into this QuickStack.
+func (sf *QuickStack) Push(val interface{}) { sf.items = append(sf.items, val) }
 
-// Pop pops the element on the top of this QuickStack.
-func (s *QuickStack) Pop() interface{} {
-	if length := len(s.items); length > 0 {
-		val := s.items[length-1]
-		s.items = s.items[:length-1]
+// Pop pop the element on the top of this QuickStack.
+// return nil if this QuickStack is empty.
+func (sf *QuickStack) Pop() interface{} {
+	if length := len(sf.items); length > 0 {
+		val := sf.items[length-1]
+		sf.items = sf.items[:length-1]
 		return val
 	}
 	return nil
 }
 
 // Peek retrieves, but does not remove, the element on the top of this QuickStack, or return nil if this QuickStack is empty.
-func (s *QuickStack) Peek() interface{} {
-	if len(s.items) > 0 {
-		return s.items[len(s.items)-1]
+func (sf *QuickStack) Peek() interface{} {
+	if len(sf.items) > 0 {
+		return sf.items[len(sf.items)-1]
 	}
 	return nil
 }
