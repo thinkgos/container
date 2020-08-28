@@ -192,11 +192,3 @@ func (s *student) Compare(v1, v2 interface{}) int {
 	}
 	return 0
 }
-
-func BenchmarkQueue(b *testing.B) {
-	q := New()
-	for i := 0; i < b.N; i++ {
-		q.Add(1)
-		q.Poll()
-	}
-}

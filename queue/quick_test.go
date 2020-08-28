@@ -185,11 +185,3 @@ func TestQuickQueueWithComparator(t *testing.T) {
 	require.Nil(t, q.Peek())
 	require.Nil(t, q.Poll())
 }
-
-func BenchmarkQuickQueue(b *testing.B) {
-	q := NewQuickQueue()
-	for i := 0; i < b.N; i++ {
-		q.Add(1)
-		q.Poll()
-	}
-}
