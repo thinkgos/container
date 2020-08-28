@@ -35,12 +35,6 @@ type Queue struct {
 	cmp    comparator.Comparator
 }
 
-// Option option for New
-type Option func(q *Queue)
-
-// WithComparator with user's Comparator
-func WithComparator(c comparator.Comparator) Option { return func(q *Queue) { q.cmp = c } }
-
 // New creates a Queue. which implement queue.Interface
 func New(opts ...Option) *Queue {
 	q := new(Queue)
@@ -50,7 +44,9 @@ func New(opts ...Option) *Queue {
 	return q
 }
 
-// Len returns the length of this priority queue.
+func (sf *Queue) apply(c comparator.Comparator) { sf.cmp = c }
+
+// Len returns the length of this queue.
 func (sf *Queue) Len() int { return sf.length }
 
 // IsEmpty returns true if this Queue contains no elements.

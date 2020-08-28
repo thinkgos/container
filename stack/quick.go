@@ -21,11 +21,7 @@ func (sf *QuickStack) Len() int { return len(sf.items) }
 func (sf *QuickStack) IsEmpty() bool { return len(sf.items) == 0 }
 
 // Clear removes all the elements from this QuickStack.
-func (sf *QuickStack) Clear() {
-	if len(sf.items) > 0 {
-		sf.items = sf.items[:0]
-	}
-}
+func (sf *QuickStack) Clear() { sf.items = nil } // should set nil for gc
 
 // Push push an element into this QuickStack.
 func (sf *QuickStack) Push(val interface{}) { sf.items = append(sf.items, val) }
@@ -35,6 +31,7 @@ func (sf *QuickStack) Push(val interface{}) { sf.items = append(sf.items, val) }
 func (sf *QuickStack) Pop() interface{} {
 	if length := len(sf.items); length > 0 {
 		val := sf.items[length-1]
+		sf.items[length-1] = nil // should set nil for gc
 		sf.items = sf.items[:length-1]
 		return val
 	}
