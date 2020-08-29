@@ -23,12 +23,12 @@ import (
 
 var _ container.Stack = (*Stack)(nil)
 
-// Stack is LIFO implement list.List
+// Stack is LIFO implement list.List.
 type Stack struct {
 	ll *list.List
 }
 
-// New creates a Stack. which implement interface stack.Interface
+// New creates a Stack. which implement interface stack.Interface.
 func New() *Stack { return &Stack{list.New()} }
 
 // Len returns the length of this priority queue.
@@ -51,7 +51,8 @@ func (sf *Stack) Pop() interface{} {
 	return nil
 }
 
-// Peek retrieves, but does not remove, the element on the top of this Stack, or return nil if this Stack is empty.
+// Peek retrieves, but does not remove,
+// the element on the top of this Stack, or return nil if this Stack is empty.
 func (sf *Stack) Peek() interface{} {
 	if e := sf.ll.Front(); e != nil {
 		return e.Value

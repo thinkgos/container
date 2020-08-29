@@ -21,22 +21,22 @@ package types
 
 //go:generate set-gen -i k8s.io/kubernetes/pkg/util/sets/types
 
-// ReferenceSetTypes for set-gen
+// ReferenceSetTypes for set-gen.
 type ReferenceSetTypes struct {
 	// These types all cause files to be generated.
 	// These types should be reflected in the output of
 	// the "//pkg/util/sets:set-gen" genrule.
-	a int64
-	b int
-	c byte
-	d string
-	e int32
-	f int8
-	g int16
-	h int32
-	i uint
-	j uint8
-	k uint16
-	l uint32
-	m uint64
+	a int64  // nolint: structcheck,unused
+	b int    // nolint: structcheck,unused
+	c byte   // nolint: structcheck,unused
+	d string // nolint: structcheck,unused
+	e int32  // nolint: structcheck,unused
+	f int8   // nolint: structcheck,unused
+	g int16  // nolint: structcheck,unused
+	h int32  // nolint: structcheck,unused
+	i uint   // nolint: structcheck,unused
+	j uint8  // nolint: structcheck,unused
+	k uint16 // nolint: structcheck,unused
+	l uint32 // nolint: structcheck,unused
+	m uint64 // nolint: structcheck,unused
 }

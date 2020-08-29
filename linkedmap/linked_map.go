@@ -35,17 +35,17 @@ type LinkedMap struct {
 	cap  int
 }
 
-// Option option for New
+// Option option for New.
 type Option func(lm *LinkedMap)
 
-// WithCap with limit capacity
-func WithCap(cap int) Option {
+// WithCap with limit capacity.
+func WithCap(capacity int) Option {
 	return func(lm *LinkedMap) {
-		lm.cap = cap
+		lm.cap = capacity
 	}
 }
 
-// WithComparator with user's Comparator
+// WithComparator with user's Comparator.
 func WithComparator(cmp comparator.Comparator) Option {
 	return func(lm *LinkedMap) {
 		lm.cmp = cmp
@@ -72,7 +72,7 @@ func (sf *LinkedMap) Cap() int { return sf.cap }
 // The complexity is O(1).
 func (sf *LinkedMap) Len() int { return sf.ll.Len() }
 
-// IsEmpty returns the list ll is empty or not
+// IsEmpty returns the list ll is empty or not.
 func (sf *LinkedMap) IsEmpty() bool { return sf.Len() == 0 }
 
 // Clear initializes or clears list ll.
@@ -116,7 +116,7 @@ func (sf *LinkedMap) PushFront(k, v interface{}) interface{} {
 // PushBack associates the specified value with the specified key in this map.
 // If the map previously contained a mapping for the key,
 // the old value is replaced by the specified value. and then move the item to the back of the list.
-// If over the cap, it will remove the back item then push new item to back
+// If over the cap, it will remove the back item then push new item to back.
 func (sf *LinkedMap) PushBack(k, v interface{}) interface{} {
 	var retVal interface{}
 
@@ -135,11 +135,11 @@ func (sf *LinkedMap) PushBack(k, v interface{}) interface{} {
 	return retVal
 }
 
-// Poll return the front element value and then remove from list
-func (sf *LinkedMap) Poll() (k interface{}, v interface{}, exist bool) { return sf.PollFront() }
+// Poll return the front element value and then remove from list.
+func (sf *LinkedMap) Poll() (k, v interface{}, exist bool) { return sf.PollFront() }
 
-// PollFront return the front element value and then remove from list
-func (sf *LinkedMap) PollFront() (k interface{}, v interface{}, exist bool) {
+// PollFront return the front element value and then remove from list.
+func (sf *LinkedMap) PollFront() (k, v interface{}, exist bool) {
 	if e := sf.ll.Front(); e != nil {
 		st := e.Value.(*store)
 		delete(sf.data, st.key)
@@ -149,8 +149,8 @@ func (sf *LinkedMap) PollFront() (k interface{}, v interface{}, exist bool) {
 	return nil, nil, false
 }
 
-// PollBack return the back element value and then remove from list
-func (sf *LinkedMap) PollBack() (k interface{}, v interface{}, exist bool) {
+// PollBack return the back element value and then remove from list.
+func (sf *LinkedMap) PollBack() (k, v interface{}, exist bool) {
 	if e := sf.ll.Back(); e != nil {
 		st := e.Value.(*store)
 		delete(sf.data, st.key)
@@ -202,12 +202,12 @@ func (sf *LinkedMap) Get(k interface{}, defaultValue ...interface{}) interface{}
 }
 
 // Peek return the front element value .
-func (sf *LinkedMap) Peek() (k interface{}, v interface{}, exist bool) {
+func (sf *LinkedMap) Peek() (k, v interface{}, exist bool) {
 	return sf.PeekFront()
 }
 
 // PeekFront return the front element value.
-func (sf *LinkedMap) PeekFront() (k interface{}, v interface{}, exist bool) {
+func (sf *LinkedMap) PeekFront() (k, v interface{}, exist bool) {
 	if e := sf.ll.Front(); e != nil {
 		st := e.Value.(*store)
 		return st.key, st.value, true
@@ -216,7 +216,7 @@ func (sf *LinkedMap) PeekFront() (k interface{}, v interface{}, exist bool) {
 }
 
 // PeekBack return the back element value .
-func (sf *LinkedMap) PeekBack() (k interface{}, v interface{}, exist bool) {
+func (sf *LinkedMap) PeekBack() (k, v interface{}, exist bool) {
 	if e := sf.ll.Back(); e != nil {
 		st := e.Value.(*store)
 		return st.key, st.value, true
@@ -224,7 +224,7 @@ func (sf *LinkedMap) PeekBack() (k interface{}, v interface{}, exist bool) {
 	return nil, nil, false
 }
 
-// Iterator iterator the list
+// Iterator iterator the list.
 func (sf *LinkedMap) Iterator(cb func(k interface{}, v interface{}) bool) {
 	for e := sf.ll.Front(); e != nil; e = e.Next() {
 		st := e.Value.(*store)
@@ -234,7 +234,7 @@ func (sf *LinkedMap) Iterator(cb func(k interface{}, v interface{}) bool) {
 	}
 }
 
-// ReverseIterator reverse iterator the list
+// ReverseIterator reverse iterator the list.
 func (sf *LinkedMap) ReverseIterator(cb func(k interface{}, v interface{}) bool) {
 	for e := sf.ll.Back(); e != nil; e = e.Prev() {
 		st := e.Value.(*store)

@@ -13,7 +13,8 @@
 // limitations under the License.
 
 // Package priorityqueue implements an unbounded priority queue based on a priority heap.
-// The elements of the priority queue are ordered according to their natural ordering, or by a Comparator provided at PriorityQueue construction time.
+// The elements of the priority queue are ordered according to their natural ordering,
+// or by a Comparator provided at PriorityQueue construction time.
 package priorityqueue
 
 import (
@@ -31,22 +32,22 @@ type Queue struct {
 	ctn *comparator.Container
 }
 
-// Option option for New
+// Option option for New.
 type Option func(q *Queue)
 
-// WithComparator with user's Comparator
+// WithComparator with user's Comparator.
 func WithComparator(c comparator.Comparator) Option {
 	return func(q *Queue) { q.ctn.Cmp = c }
 }
 
-// WithMaxHeap with max heap
+// WithMaxHeap with max heap.
 func WithMaxHeap(b bool) Option {
 	return func(q *Queue) {
 		q.ctn.Reverse = b
 	}
 }
 
-// New initializes and returns an Queue, default min heap
+// New initializes and returns an Queue, default min heap.
 func New(opts ...Option) *Queue {
 	q := &Queue{
 		ctn: &comparator.Container{
@@ -102,7 +103,7 @@ func (sf *Queue) Remove(val interface{}) {
 }
 
 func (sf *Queue) indexOf(val interface{}) int {
-	if sf.Len() > 0 && nil != val {
+	if sf.Len() > 0 && val != nil {
 		for i := 0; i < sf.Len(); i++ {
 			if sf.compare(val, sf.ctn.Items[i]) {
 				return i

@@ -6,12 +6,12 @@ import (
 
 var _ container.Stack = (*QuickStack)(nil)
 
-// QuickStack is quick LIFO stack implement with slice
+// QuickStack is quick LIFO stack implement with slice.
 type QuickStack struct {
 	items []interface{}
 }
 
-// NewQuickStack creates a QuickStack. which implement interface stack.Interface
+// NewQuickStack creates a QuickStack. which implement interface stack.Interface.
 func NewQuickStack() *QuickStack { return &QuickStack{} }
 
 // Len returns the length of this priority queue.
@@ -38,7 +38,9 @@ func (sf *QuickStack) Pop() interface{} {
 	return nil
 }
 
-// Peek retrieves, but does not remove, the element on the top of this QuickStack, or return nil if this QuickStack is empty.
+// Peek retrieves, but does not remove,
+// the element on the top of this QuickStack,
+// or return nil if this QuickStack is empty.
 func (sf *QuickStack) Peek() interface{} {
 	if len(sf.items) > 0 {
 		return sf.items[len(sf.items)-1]

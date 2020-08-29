@@ -26,40 +26,40 @@ var (
 
 // Container for sort or heap sort, it implement sort.Interface and heap.Interface.
 type Container struct {
-	noCopy  noCopy
+	noCopy  noCopy // nolint: structcheck,unused
 	Items   []interface{}
 	Cmp     Comparator
 	Reverse bool
 }
 
-// Len implement heap.Interface
+// Len implement heap.Interface.
 func (sf *Container) Len() int {
 	return len(sf.Items)
 }
 
-// Swap implement heap.Interface
+// Swap implement heap.Interface.
 func (sf *Container) Swap(i, j int) {
 	sf.Items[i], sf.Items[j] = sf.Items[j], sf.Items[i]
 }
 
-// Less implement heap.Interface
+// Less implement heap.Interface.
 func (sf *Container) Less(i, j int) bool {
 	if sf.Reverse {
 		i, j = j, i
 	}
 
-	if nil != sf.Cmp {
+	if sf.Cmp != nil {
 		return sf.Cmp.Compare(sf.Items[i], sf.Items[j]) < 0
 	}
 	return Compare(sf.Items[i], sf.Items[j]) < 0
 }
 
-// Push implement heap.Interface
+// Push implement heap.Interface.
 func (sf *Container) Push(x interface{}) {
 	sf.Items = append(sf.Items, x)
 }
 
-// Pop implement heap.Interface
+// Pop implement heap.Interface.
 func (sf *Container) Pop() interface{} {
 	old := sf.Items
 	n := len(old)
@@ -69,12 +69,14 @@ func (sf *Container) Pop() interface{} {
 	return x
 }
 
-// Sort sorts values into ascending sequence according to their natural ordering, or according to the provided comparator.
+// Sort sorts values into ascending sequence according to their natural ordering,
+// or according to the provided comparator.
 func (sf *Container) Sort() {
 	sort.Sort(sf)
 }
 
-// Sort sorts values into ascending sequence according to their natural ordering, or according to the provided comparator.
+// Sort sorts values into ascending sequence according to their natural ordering,
+// or according to the provided comparator.
 func Sort(values []interface{}, c Comparator, reverse ...bool) {
 	rev := false
 	if len(reverse) > 0 {

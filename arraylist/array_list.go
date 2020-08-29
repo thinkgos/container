@@ -31,10 +31,10 @@ type List struct {
 	cmp   comparator.Comparator
 }
 
-// Option option for New
+// Option option for New.
 type Option func(l *List)
 
-// WithComparator with user's Comparator
+// WithComparator with user's Comparator.
 func WithComparator(cmp comparator.Comparator) Option {
 	return func(l *List) {
 		l.cmp = cmp
@@ -56,7 +56,7 @@ func New(opts ...Option) *List {
 // The complexity is O(1).
 func (sf *List) Len() int { return len(sf.items) }
 
-// IsEmpty returns the list l is empty or not
+// IsEmpty returns the list l is empty or not.
 func (sf *List) IsEmpty() bool { return sf.Len() == 0 }
 
 // Clear initializes or clears list l.
@@ -65,7 +65,7 @@ func (sf *List) Clear() { sf.items = make([]interface{}, 0) }
 // Push inserts a new element e with value v at the back of list l.
 func (sf *List) Push(items interface{}) { sf.items = append(sf.items, items) }
 
-// PushFront inserts a new element e with value v at the front of list l
+// PushFront inserts a new element e with value v at the front of list l.
 func (sf *List) PushFront(v interface{}) {
 	sf.items = append(sf.items, v)
 	moveLastToFirst(sf.items)
@@ -77,7 +77,7 @@ func (sf *List) PushBack(v interface{}) { sf.items = append(sf.items, v) }
 // Add inserts the specified element at the specified position in this list.
 func (sf *List) Add(index int, val interface{}) error {
 	if index < 0 || index > len(sf.items) {
-		return fmt.Errorf("Index out of range, index:%d, len:%d", index, sf.Len())
+		return fmt.Errorf("index out of range, index:%d, len:%d", index, sf.Len())
 	}
 
 	if index == sf.Len() {
@@ -106,12 +106,12 @@ func (sf *List) PushBackList(other *List) {
 	sf.items = append(sf.items, other.items...)
 }
 
-// Poll return the front element value and then remove from list
+// Poll return the front element value and then remove from list.
 func (sf *List) Poll() interface{} {
 	return sf.PollFront()
 }
 
-// PollFront return the front element value and then remove from list
+// PollFront return the front element value and then remove from list.
 func (sf *List) PollFront() interface{} {
 	var val interface{}
 
@@ -123,7 +123,7 @@ func (sf *List) PollFront() interface{} {
 	return val
 }
 
-// PollBack return the back element value and then remove from list
+// PollBack return the back element value and then remove from list.
 func (sf *List) PollBack() interface{} {
 	var val interface{}
 
@@ -138,7 +138,7 @@ func (sf *List) PollBack() interface{} {
 // It returns an error if the index is out of range.
 func (sf *List) Remove(index int) (interface{}, error) {
 	if index < 0 || index >= len(sf.items) {
-		return nil, fmt.Errorf("Index out of range, index:%d, len:%d", index, sf.Len())
+		return nil, fmt.Errorf("index out of range, index:%d, len:%d", index, sf.Len())
 	}
 
 	val := sf.items[index]
@@ -147,7 +147,7 @@ func (sf *List) Remove(index int) (interface{}, error) {
 	return val, nil
 }
 
-// RemoveValue removes the first occurence of the specified element from this list, if it is present.
+// RemoveValue removes the first occurrence of the specified element from this list, if it is present.
 // It returns false if the target value isn't present, otherwise returns true.
 func (sf *List) RemoveValue(val interface{}) bool {
 	if sf.Len() == 0 {
@@ -162,21 +162,21 @@ func (sf *List) RemoveValue(val interface{}) bool {
 	return false
 }
 
-// Get returns the element at the specified positon in this list. The index must be in the range of [0, size).
+// Get returns the element at the specified position in this list. The index must be in the range of [0, size).
 func (sf *List) Get(index int) (interface{}, error) {
 	if index < 0 || index >= len(sf.items) {
-		return nil, fmt.Errorf("Index out of range, index:%d, len:%d", index, sf.Len())
+		return nil, fmt.Errorf("index out of range, index:%d, len:%d", index, sf.Len())
 	}
 
 	return sf.items[index], nil
 }
 
-// Peek return the front element value
+// Peek return the front element value.
 func (sf *List) Peek() interface{} {
 	return sf.PeekFront()
 }
 
-// PeekFront return the front element value
+// PeekFront return the front element value.
 func (sf *List) PeekFront() interface{} {
 	if len(sf.items) > 0 {
 		return sf.items[0]
@@ -184,7 +184,7 @@ func (sf *List) PeekFront() interface{} {
 	return nil
 }
 
-// PeekBack return the back element value
+// PeekBack return the back element value.
 func (sf *List) PeekBack() interface{} {
 	if len(sf.items) > 0 {
 		return sf.items[len(sf.items)-1]
@@ -210,12 +210,12 @@ func (sf *List) ReverseIterator(f func(interface{}) bool) {
 	}
 }
 
-// Contains contains the value
+// Contains contains the value.
 func (sf *List) Contains(val interface{}) bool {
 	return val != nil && sf.indexOf(val) >= 0
 }
 
-// Sort sort the list
+// Sort sort the list.
 func (sf *List) Sort(reverse ...bool) {
 	if sf.Len() < 2 {
 		return
@@ -223,7 +223,7 @@ func (sf *List) Sort(reverse ...bool) {
 	comparator.Sort(sf.items, sf.cmp, reverse...)
 }
 
-// Values get a copy of all the values in the list
+// Values get a copy of all the values in the list.
 func (sf *List) Values() []interface{} {
 	items := make([]interface{}, 0, len(sf.items))
 	items = append(items, sf.items...)
@@ -231,7 +231,8 @@ func (sf *List) Values() []interface{} {
 }
 
 func (sf *List) shrinkList() {
-	if oldLen, oldCap := len(sf.items), cap(sf.items); oldCap > 1024 && oldLen <= oldCap/4 { // shrink when len(list) <= cap(list)/4
+	oldLen, oldCap := len(sf.items), cap(sf.items)
+	if oldCap > 1024 && oldLen <= oldCap/4 { // shrink when len(list) <= cap(list)/4
 		newItems := make([]interface{}, oldLen)
 		copy(newItems, sf.items)
 		sf.Clear()
@@ -239,7 +240,7 @@ func (sf *List) shrinkList() {
 	}
 }
 
-// indexOf returns the index of the first occurence of the specified element
+// indexOf returns the index of the first occurrence of the specified element
 // in this list, or -1 if this list does not contain the element.
 func (sf *List) indexOf(val interface{}) int {
 	for i, v := range sf.items {

@@ -7,7 +7,7 @@ import (
 
 var _ container.Queue = (*QuickQueue)(nil)
 
-// QuickQueue implement with slice
+// QuickQueue implement with slice.
 type QuickQueue struct {
 	headPos int
 	head    []interface{}
@@ -15,6 +15,7 @@ type QuickQueue struct {
 	cmp     comparator.Comparator
 }
 
+// NewQuickQueue new quick queue.
 func NewQuickQueue(opts ...Option) *QuickQueue {
 	q := new(QuickQueue)
 	for _, opt := range opts {
@@ -34,7 +35,7 @@ func (sf *QuickQueue) IsEmpty() bool { return sf.Len() == 0 }
 // Clear initializes or clears queue.
 func (sf *QuickQueue) Clear() { sf.head, sf.tail, sf.headPos = nil, nil, 0 } // should set nil for gc
 
-// Add items to the queue
+// Add items to the queue.
 func (sf *QuickQueue) Add(v interface{}) { sf.tail = append(sf.tail, v) }
 
 // Peek retrieves, but does not remove, the head of this Queue, or return nil if this Queue is empty.

@@ -153,7 +153,7 @@ func pqTestPQDeleteImpl(t *testing.T, q *Queue, input, expected []interface{}, v
 
 type myInt struct{}
 
-// Compare returns reverse order
+// Compare returns reverse order.
 func (i myInt) Compare(v1, v2 interface{}) int {
 	i1, i2 := v1.(int), v2.(int)
 	if i1 < i2 {

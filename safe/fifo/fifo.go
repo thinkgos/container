@@ -35,8 +35,8 @@ type ErrRequeue struct {
 	Err error
 }
 
-// ErrFIFOClosed used when FIFO is closed
-var ErrFIFOClosed = errors.New("DeltaFIFO: manipulating with closed queue")
+// ErrFIFOClosed used when FIFO is closed.
+var ErrFIFOClosed = errors.New("deltaFIFO: manipulating with closed queue")
 
 func (e ErrRequeue) Error() string {
 	if e.Err == nil {
@@ -85,7 +85,7 @@ type Queue interface {
 // unless you really really really really know what you are doing.
 func Pop(queue Queue) interface{} {
 	var result interface{}
-	queue.Pop(func(obj interface{}) error {
+	queue.Pop(func(obj interface{}) error { // nolint: errcheck
 		result = obj
 		return nil
 	})
@@ -260,7 +260,7 @@ func (f *FIFO) GetByKey(key string) (item interface{}, exists bool, err error) {
 	return item, exists, nil
 }
 
-// IsClosed checks if the queue is closed
+// IsClosed checks if the queue is closed.
 func (f *FIFO) IsClosed() bool {
 	f.lock.Lock()
 	defer f.lock.Unlock()

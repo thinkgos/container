@@ -117,7 +117,6 @@ func TestUserCompare(t *testing.T) {
 	ok := ll.RemoveValue(&arrayListNode{age: 20})
 	assert.True(t, ok)
 	assert.Equal(t, 3, ll.Len())
-
 }
 
 func TestArrayListIterator(t *testing.T) {
@@ -179,7 +178,7 @@ func TestArrayListSort(t *testing.T) {
 	}
 }
 
-// fmt.Printf("%#v\r\n", l.items)
+// fmt.Printf("%#v\r\n", l.items).
 func TestExtending(t *testing.T) {
 	l1 := New()
 	l2 := New()

@@ -20,13 +20,17 @@ import (
 	"time"
 )
 
-// Compare compares its two arguments if they have the same type and are comparable, otherwise returns an error in the second return value.
-// It returns a negative integer, zero, or a positive integer as the first argument is less than, equal to, or greater than the second.
+// Compare compares its two arguments
+// if they have the same type and are comparable,
+// otherwise returns an error in the second return value.
+// It returns a negative integer, zero,
+// or a positive integer as the first argument is
+// less than, equal to, or greater than the second.
 func Compare(v1, v2 interface{}) int {
-	if nil == v1 && nil == v2 {
+	if v1 == nil && v2 == nil {
 		return 0
 	}
-	if nil == v1 || nil == v2 {
+	if v1 == nil || v2 == nil {
 		panic("A nil value can't be compared to a non-nil value")
 	}
 

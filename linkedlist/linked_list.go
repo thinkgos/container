@@ -32,10 +32,10 @@ type LinkedList struct {
 	cmp comparator.Comparator
 }
 
-// Option option for New
+// Option option for New.
 type Option func(l *LinkedList)
 
-// WithComparator with user's Comparator
+// WithComparator with user's Comparator.
 func WithComparator(cmp comparator.Comparator) Option {
 	return func(l *LinkedList) {
 		l.cmp = cmp
@@ -55,7 +55,7 @@ func New(opts ...Option) *LinkedList {
 // The complexity is O(1).
 func (sf *LinkedList) Len() int { return sf.l.Len() }
 
-// IsEmpty returns the list l is empty or not
+// IsEmpty returns the list l is empty or not.
 func (sf *LinkedList) IsEmpty() bool { return sf.l.Len() == 0 }
 
 // Clear initializes or clears list l.
@@ -64,16 +64,16 @@ func (sf *LinkedList) Clear() { sf.l.Init() }
 // Push inserts a new element e with value v at the back of list l.
 func (sf *LinkedList) Push(v interface{}) { sf.l.PushBack(v) }
 
-// PushFront inserts a new element e with value v at the front of list l
+// PushFront inserts a new element e with value v at the front of list l.
 func (sf *LinkedList) PushFront(v interface{}) { sf.l.PushFront(v) }
 
 // PushBack inserts a new element e with value v at the back of list l.
 func (sf *LinkedList) PushBack(v interface{}) { sf.l.PushBack(v) }
 
-// Add add to the index of the list with value
+// Add add to the index of the list with value.
 func (sf *LinkedList) Add(index int, val interface{}) error {
 	if index < 0 || index > sf.Len() {
-		return fmt.Errorf("Index out of range, index: %d, len: %d", index, sf.Len())
+		return fmt.Errorf("index out of range, index: %d, len: %d", index, sf.Len())
 	}
 
 	if index == sf.Len() {
@@ -96,12 +96,12 @@ func (sf *LinkedList) PushBackList(other *LinkedList) {
 	sf.l.PushBackList(other.l)
 }
 
-// Poll return the front element value and then remove from list
+// Poll return the front element value and then remove from list.
 func (sf *LinkedList) Poll() interface{} {
 	return sf.PollFront()
 }
 
-// PollFront return the front element value and then remove from list
+// PollFront return the front element value and then remove from list.
 func (sf *LinkedList) PollFront() interface{} {
 	e := sf.l.Front()
 	if e != nil {
@@ -110,7 +110,7 @@ func (sf *LinkedList) PollFront() interface{} {
 	return nil
 }
 
-// PollBack return the back element value and then remove from list
+// PollBack return the back element value and then remove from list.
 func (sf *LinkedList) PollBack() interface{} {
 	e := sf.l.Back()
 	if e != nil {
@@ -119,15 +119,15 @@ func (sf *LinkedList) PollBack() interface{} {
 	return nil
 }
 
-// Remove remove the index in the list
+// Remove remove the index in the list.
 func (sf *LinkedList) Remove(index int) (interface{}, error) {
 	if index < 0 || index >= sf.Len() {
-		return nil, fmt.Errorf("Index out of range, index:%d, len:%d", index, sf.Len())
+		return nil, fmt.Errorf("index out of range, index:%d, len:%d", index, sf.Len())
 	}
 	return sf.l.Remove(sf.getElement(index)), nil
 }
 
-// RemoveValue remove the value in the list
+// RemoveValue remove the value in the list.
 func (sf *LinkedList) RemoveValue(val interface{}) bool {
 	if sf.Len() == 0 {
 		return false
@@ -145,17 +145,17 @@ func (sf *LinkedList) RemoveValue(val interface{}) bool {
 // Get get the index in the list.
 func (sf *LinkedList) Get(index int) (interface{}, error) {
 	if index < 0 || index >= sf.Len() {
-		return nil, fmt.Errorf("Index out of range, index: %d, len: %d", index, sf.Len())
+		return nil, fmt.Errorf("index out of range, index: %d, len: %d", index, sf.Len())
 	}
 	return sf.getElement(index).Value, nil
 }
 
-// Peek return the front element value
+// Peek return the front element value.
 func (sf *LinkedList) Peek() interface{} {
 	return sf.PeekFront()
 }
 
-// PeekFront return the front element value
+// PeekFront return the front element value.
 func (sf *LinkedList) PeekFront() interface{} {
 	if e := sf.l.Front(); e != nil {
 		return e.Value
@@ -163,7 +163,7 @@ func (sf *LinkedList) PeekFront() interface{} {
 	return nil
 }
 
-// PeekBack return the back element value
+// PeekBack return the back element value.
 func (sf *LinkedList) PeekBack() interface{} {
 	if e := sf.l.Back(); e != nil {
 		return e.Value
@@ -171,7 +171,7 @@ func (sf *LinkedList) PeekBack() interface{} {
 	return nil
 }
 
-// Iterator iterator the list
+// Iterator iterator the list.
 func (sf *LinkedList) Iterator(cb func(interface{}) bool) {
 	for e := sf.l.Front(); e != nil; e = e.Next() {
 		if cb == nil || !cb(e.Value) {
@@ -180,7 +180,7 @@ func (sf *LinkedList) Iterator(cb func(interface{}) bool) {
 	}
 }
 
-// ReverseIterator reverse iterator the list
+// ReverseIterator reverse iterator the list.
 func (sf *LinkedList) ReverseIterator(cb func(interface{}) bool) {
 	for e := sf.l.Back(); e != nil; e = e.Prev() {
 		if cb == nil || !cb(e.Value) {
@@ -189,12 +189,12 @@ func (sf *LinkedList) ReverseIterator(cb func(interface{}) bool) {
 	}
 }
 
-// Contains contains the value
+// Contains contains the value.
 func (sf *LinkedList) Contains(val interface{}) bool {
 	return val != nil && sf.indexOf(val) >= 0
 }
 
-// Sort sort the list
+// Sort sort the list.
 func (sf *LinkedList) Sort(reverse ...bool) {
 	if sf.Len() < 2 {
 		return
@@ -211,7 +211,7 @@ func (sf *LinkedList) Sort(reverse ...bool) {
 	}
 }
 
-// Values get a copy of all the values in the list
+// Values get a copy of all the values in the list.
 func (sf *LinkedList) Values() []interface{} {
 	if sf.Len() == 0 {
 		return []interface{}{}
@@ -225,7 +225,7 @@ func (sf *LinkedList) Values() []interface{} {
 	return values
 }
 
-// getElement returns the element at the specified positon.
+// getElement returns the element at the specified position.
 func (sf *LinkedList) getElement(index int) *list.Element {
 	var e *list.Element
 
@@ -241,7 +241,7 @@ func (sf *LinkedList) getElement(index int) *list.Element {
 	return e
 }
 
-// indexOf returns the index of the first occurence of the specified element
+// indexOf returns the index of the first occurrence of the specified element
 // in this list, or -1 if this list does not contain the element.
 func (sf *LinkedList) indexOf(val interface{}) int {
 	for index, e := 0, sf.l.Front(); e != nil; e = e.Next() {

@@ -3,11 +3,13 @@
 container implements some containers, currently the containers are not thread-safe. `safe` path support thread-safe.
 
 [![GoDoc](https://godoc.org/github.com/thinkgos/container?status.svg)](https://godoc.org/github.com/thinkgos/container)
-[![Build Status](https://travis-ci.org/thinkgos/container.svg?branch=master)](https://travis-ci.org/thinkgos/container)
+[![Go.Dev reference](https://img.shields.io/badge/go.dev-reference-blue?logo=go&logoColor=white)](https://pkg.go.dev/github.com/thinkgos/container?tab=doc)
+[![Build Status](https://www.travis-ci.org/thinkgos/container.svg?branch=master)](https://www.travis-ci.org/thinkgos/container)
 [![codecov](https://codecov.io/gh/thinkgos/container/branch/master/graph/badge.svg)](https://codecov.io/gh/thinkgos/container)
 ![Action Status](https://github.com/thinkgos/container/workflows/Go/badge.svg)
 [![Go Report Card](https://goreportcard.com/badge/github.com/thinkgos/container)](https://goreportcard.com/report/github.com/thinkgos/container)
-[![Licence](https://img.shields.io/github/license/thinkgos/container)](https://raw.githubusercontent.com/thinkgos/container/master/LICENSE)  
+[![License](https://img.shields.io/github/license/thinkgos/container)](https://github.com/thinkgos/container/raw/master/LICENSE)
+[![Tag](https://img.shields.io/github/v/tag/thinkgos/container)](https://github.com/thinkgos/container/tags)
 
 - **[How to use this repo](#how-to-use-this-package)**
 - **[Containers](#Containers-Interface)**
@@ -15,7 +17,9 @@ container implements some containers, currently the containers are not thread-sa
   - [Stack](#stack) 
     - stack use container/list.
     - quick stack use builtin slice.
-  - [Queue](#queue) use container/list
+  - [Queue](#queue) 
+    - queue use container/list
+    - quick queue use builtin slice.
   - [PriorityQueue](#priorityqueue) use builtin slice with container/heap
   - [LinkedList](#linkedlist) use container/list
   - [ArrayList](#arraylist) use builtin slice.

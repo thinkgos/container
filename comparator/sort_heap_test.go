@@ -48,7 +48,7 @@ func TestReverseSortWithComparator(t *testing.T) {
 	assertSort(t, input2, expected2, true, reverseString{})
 }
 
-func assertSort(t *testing.T, input []interface{}, expected []interface{}, reverse bool, c Comparator) {
+func assertSort(t *testing.T, input, expected []interface{}, reverse bool, c Comparator) {
 	// sort
 	Sort(input, c, reverse)
 	for i := 0; i < len(input); i++ {
@@ -58,7 +58,7 @@ func assertSort(t *testing.T, input []interface{}, expected []interface{}, rever
 
 type reverseString struct{}
 
-// Compare returns Reverse order for string
+// Compare returns Reverse order for string.
 func (i reverseString) Compare(v1, v2 interface{}) int {
 	i1, i2 := v1.(string), v2.(string)
 
@@ -73,7 +73,7 @@ func (i reverseString) Compare(v1, v2 interface{}) int {
 
 type reverseInt struct{}
 
-// Compare returns Reverse order for int
+// Compare returns Reverse order for int.
 func (i reverseInt) Compare(v1, v2 interface{}) int {
 	i1, i2 := v1.(int), v2.(int)
 
@@ -128,7 +128,7 @@ func TestMaxHeapWithComparator(t *testing.T) {
 	heapTestImpl(t, input2, expected2, false, reverseString{})
 }
 
-func heapTestImpl(t *testing.T, input []interface{}, expected []interface{}, isMinHeap bool, c Comparator) {
+func heapTestImpl(t *testing.T, input, expected []interface{}, isMinHeap bool, c Comparator) {
 	container := &Container{
 		Items:   input,
 		Cmp:     c,
@@ -183,7 +183,8 @@ func TestMaxHeapRemoveWithComparator(t *testing.T) {
 	heapRemoveTestImpl(t, input2, expected2, "tom", false, reverseString{})
 }
 
-func heapRemoveTestImpl(t *testing.T, input []interface{}, expected []interface{}, val interface{}, isMinHeap bool, c Comparator) {
+func heapRemoveTestImpl(t *testing.T, input, expected []interface{},
+	val interface{}, isMinHeap bool, c Comparator) {
 	container := &Container{
 		Items:   input,
 		Cmp:     c,
@@ -212,9 +213,7 @@ func heapRemoveTestImpl(t *testing.T, input []interface{}, expected []interface{
 	assert.Zero(t, container.Len())
 }
 
-/*-----------------------------------------------------------------------------
-// Test: HeapInit and HeapPostUpdate
------------------------------------------------------------------------------*/
+// Test: HeapInit and HeapPostUpdate.
 func TestHeapFix(t *testing.T) {
 	input1 := []interface{}{6, 4, 9, 19, 15}
 	expected1 := []interface{}{4, 6, 9, 19, 25}
@@ -255,7 +254,8 @@ func TestMaxHeapFixWithComparator(t *testing.T) {
 	heapFixTestImpl(t, input2, expected2, "tom", "zoo", false, reverseString{})
 }
 
-func heapFixTestImpl(t *testing.T, input []interface{}, expected []interface{}, oldVal, newVal interface{}, isMinHeap bool, c Comparator) {
+func heapFixTestImpl(t *testing.T, input, expected []interface{},
+	oldVal, newVal interface{}, isMinHeap bool, c Comparator) {
 	in := &Container{
 		Items:   input,
 		Cmp:     c,

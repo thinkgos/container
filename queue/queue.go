@@ -21,7 +21,7 @@ import (
 
 var _ container.Queue = (*Queue)(nil)
 
-// element is an element of the Queue implement with list
+// element is an element of the Queue implement with list.
 type element struct {
 	next  *element
 	value interface{}
@@ -35,7 +35,7 @@ type Queue struct {
 	cmp    comparator.Comparator
 }
 
-// New creates a Queue. which implement queue.Interface
+// New creates a Queue. which implement queue.Interface.
 func New(opts ...Option) *Queue {
 	q := new(Queue)
 	for _, opt := range opts {
@@ -55,7 +55,7 @@ func (sf *Queue) IsEmpty() bool { return sf.Len() == 0 }
 // Clear initializes or clears queue.
 func (sf *Queue) Clear() { sf.head, sf.tail, sf.length = nil, nil, 0 }
 
-// Add items to the queue
+// Add items to the queue.
 func (sf *Queue) Add(v interface{}) {
 	e := &element{value: v}
 	if sf.tail == nil {

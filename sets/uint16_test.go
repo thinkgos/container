@@ -97,7 +97,6 @@ func TestUint16SetDeleteMultiples(t *testing.T) {
 	if !s.Contains(2) {
 		t.Errorf("Missing contents: %#v", s)
 	}
-
 }
 
 func TestNewUint16Set(t *testing.T) {
@@ -282,7 +281,8 @@ func TestUint16Intersection(t *testing.T) {
 		}
 
 		if !intersection.Equal(test.expected) {
-			t.Errorf("Expected intersection.Equal(expected) but not true.  intersection:%v expected:%v", intersection.List(), test.expected.List())
+			t.Errorf("Expected intersection.Equal(expected) but not true.  intersection:%v expected:%v",
+				intersection.List(), test.expected.List())
 		}
 	}
 }

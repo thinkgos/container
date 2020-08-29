@@ -87,7 +87,7 @@ func TestSet(t *testing.T) {
 
 type myInt struct{}
 
-// Compare returns reverse order
+// Compare returns reverse order.
 func (i myInt) Compare(v1, v2 interface{}) int {
 	i1, i2 := v1.(int), v2.(int)
 	if i1 < i2 {
@@ -119,7 +119,6 @@ func TestSetDeleteMultiples(t *testing.T) {
 	if !s.Contains("b") {
 		t.Errorf("Missing contents: %#v", s)
 	}
-
 }
 
 func TestNewSet(t *testing.T) {
@@ -297,7 +296,8 @@ func TestIntersection(t *testing.T) {
 		}
 
 		if !intersection.Equal(test.expected) {
-			t.Errorf("Expected intersection.Equal(expected) but not true.  intersection:%v expected:%v", intersection.List(), test.expected.List())
+			t.Errorf("Expected intersection.Equal(expected) but not true.  intersection:%v expected:%v",
+				intersection.List(), test.expected.List())
 		}
 	}
 }

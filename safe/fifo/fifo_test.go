@@ -42,12 +42,12 @@ func TestFIFO_basic(t *testing.T) {
 	const amount = 500
 	go func() {
 		for i := 0; i < amount; i++ {
-			f.Add(mkFifoObj(string([]rune{'a', rune(i)}), i+1))
+			f.Add(mkFifoObj(string([]rune{'a', rune(i)}), i+1)) // nolint: errcheck
 		}
 	}()
 	go func() {
 		for u := uint64(0); u < amount; u++ {
-			f.Add(mkFifoObj(string([]rune{'b', rune(u)}), u+1))
+			f.Add(mkFifoObj(string([]rune{'b', rune(u)}), u+1)) // nolint: errcheck
 		}
 	}()
 
@@ -75,7 +75,7 @@ func TestFIFO_basic(t *testing.T) {
 func TestFIFO_requeueOnPop(t *testing.T) {
 	f := NewFIFO(testFifoObjectKeyFunc)
 
-	f.Add(mkFifoObj("foo", 10))
+	f.Add(mkFifoObj("foo", 10)) // nolint: errcheck
 	_, err := f.Pop(func(obj interface{}) error {
 		if obj.(testFifoObject).name != "foo" {
 			t.Fatalf("unexpected object: %#v", obj)
@@ -85,7 +85,7 @@ func TestFIFO_requeueOnPop(t *testing.T) {
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
-	if _, ok, err := f.GetByKey("foo"); !ok || err != nil {
+	if _, ok, err := f.GetByKey("foo"); err != nil || !ok {
 		t.Fatalf("object should have been requeued: %t %v", ok, err)
 	}
 
@@ -98,7 +98,7 @@ func TestFIFO_requeueOnPop(t *testing.T) {
 	if err == nil || err.Error() != "test error" {
 		t.Fatalf("unexpected error: %v", err)
 	}
-	if _, ok, err := f.GetByKey("foo"); !ok || err != nil {
+	if _, ok, err := f.GetByKey("foo"); err != nil || !ok {
 		t.Fatalf("object should have been requeued: %t %v", ok, err)
 	}
 
@@ -118,8 +118,8 @@ func TestFIFO_requeueOnPop(t *testing.T) {
 
 func TestFIFO_addUpdate(t *testing.T) {
 	f := NewFIFO(testFifoObjectKeyFunc)
-	f.Add(mkFifoObj("foo", 10))
-	f.Update(mkFifoObj("foo", 15))
+	f.Add(mkFifoObj("foo", 10))    // nolint: errcheck
+	f.Update(mkFifoObj("foo", 15)) // nolint: errcheck
 
 	if e, a := []interface{}{mkFifoObj("foo", 15)}, f.List(); !reflect.DeepEqual(e, a) {
 		t.Errorf("Expected %+v, got %+v", e, a)
@@ -152,8 +152,8 @@ func TestFIFO_addUpdate(t *testing.T) {
 
 func TestFIFO_addReplace(t *testing.T) {
 	f := NewFIFO(testFifoObjectKeyFunc)
-	f.Add(mkFifoObj("foo", 10))
-	f.Replace([]interface{}{mkFifoObj("foo", 15)}, "15")
+	f.Add(mkFifoObj("foo", 10))                          // nolint: errcheck
+	f.Replace([]interface{}{mkFifoObj("foo", 15)}, "15") // nolint: errcheck
 	got := make(chan testFifoObject, 2)
 	go func() {
 		for {
@@ -179,17 +179,17 @@ func TestFIFO_addReplace(t *testing.T) {
 func TestFIFO_detectLineJumpers(t *testing.T) {
 	f := NewFIFO(testFifoObjectKeyFunc)
 
-	f.Add(mkFifoObj("foo", 10))
-	f.Add(mkFifoObj("bar", 1))
-	f.Add(mkFifoObj("foo", 11))
-	f.Add(mkFifoObj("foo", 13))
-	f.Add(mkFifoObj("zab", 30))
+	f.Add(mkFifoObj("foo", 10)) // nolint: errcheck
+	f.Add(mkFifoObj("bar", 1))  // nolint: errcheck
+	f.Add(mkFifoObj("foo", 11)) // nolint: errcheck
+	f.Add(mkFifoObj("foo", 13)) // nolint: errcheck
+	f.Add(mkFifoObj("zab", 30)) // nolint: errcheck
 
 	if e, a := 13, Pop(f).(testFifoObject).val; a != e {
 		t.Fatalf("expected %d, got %d", e, a)
 	}
-
-	f.Add(mkFifoObj("foo", 14)) // ensure foo doesn't jump back in line
+	// ensure foo doesn't jump back in line
+	f.Add(mkFifoObj("foo", 14)) // nolint: errcheck
 
 	if e, a := 1, Pop(f).(testFifoObject).val; a != e {
 		t.Fatalf("expected %d, got %d", e, a)
@@ -207,10 +207,10 @@ func TestFIFO_detectLineJumpers(t *testing.T) {
 func TestFIFO_addIfNotPresent(t *testing.T) {
 	f := NewFIFO(testFifoObjectKeyFunc)
 
-	f.Add(mkFifoObj("a", 1))
-	f.Add(mkFifoObj("b", 2))
-	f.AddIfNotPresent(mkFifoObj("b", 3))
-	f.AddIfNotPresent(mkFifoObj("c", 4))
+	f.Add(mkFifoObj("a", 1))             // nolint: errcheck
+	f.Add(mkFifoObj("b", 2))             // nolint: errcheck
+	f.AddIfNotPresent(mkFifoObj("b", 3)) // nolint: errcheck
+	f.AddIfNotPresent(mkFifoObj("c", 4)) // nolint: errcheck
 
 	if e, a := 3, len(f.items); a != e {
 		t.Fatalf("expected queue length %d, got %d", e, a)
@@ -235,32 +235,42 @@ func TestFIFO_HasSynced(t *testing.T) {
 		},
 		{
 			actions: []func(f *FIFO){
-				func(f *FIFO) { f.Add(mkFifoObj("a", 1)) },
+				func(f *FIFO) {
+					f.Add(mkFifoObj("a", 1)) // nolint: errcheck
+				},
 			},
 			expectedSynced: true,
 		},
 		{
 			actions: []func(f *FIFO){
-				func(f *FIFO) { f.Replace([]interface{}{}, "0") },
+				func(f *FIFO) {
+					f.Replace([]interface{}{}, "0") // nolint: errcheck
+				},
 			},
 			expectedSynced: true,
 		},
 		{
 			actions: []func(f *FIFO){
-				func(f *FIFO) { f.Replace([]interface{}{mkFifoObj("a", 1), mkFifoObj("b", 2)}, "0") },
+				func(f *FIFO) {
+					f.Replace([]interface{}{mkFifoObj("a", 1), mkFifoObj("b", 2)}, "0") // nolint: errcheck
+				},
 			},
 			expectedSynced: false,
 		},
 		{
 			actions: []func(f *FIFO){
-				func(f *FIFO) { f.Replace([]interface{}{mkFifoObj("a", 1), mkFifoObj("b", 2)}, "0") },
+				func(f *FIFO) {
+					f.Replace([]interface{}{mkFifoObj("a", 1), mkFifoObj("b", 2)}, "0") // nolint: errcheck
+				},
 				func(f *FIFO) { Pop(f) },
 			},
 			expectedSynced: false,
 		},
 		{
 			actions: []func(f *FIFO){
-				func(f *FIFO) { f.Replace([]interface{}{mkFifoObj("a", 1), mkFifoObj("b", 2)}, "0") },
+				func(f *FIFO) {
+					f.Replace([]interface{}{mkFifoObj("a", 1), mkFifoObj("b", 2)}, "0") // nolint: errcheck
+				},
 				func(f *FIFO) { Pop(f) },
 				func(f *FIFO) { Pop(f) },
 			},
@@ -289,9 +299,7 @@ func TestFIFO_PopShouldUnblockWhenClosed(t *testing.T) {
 	const jobs = 10
 	for i := 0; i < jobs; i++ {
 		go func() {
-			f.Pop(func(obj interface{}) error {
-				return nil
-			})
+			f.Pop(func(obj interface{}) error { return nil }) // nolint: errcheck
 			c <- struct{}{}
 		}()
 	}

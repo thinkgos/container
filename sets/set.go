@@ -6,23 +6,24 @@ import (
 	"github.com/thinkgos/container/comparator"
 )
 
-// Set sets.Set is a set of interface, implemented via map[interface{}]struct{} for minimal memory consumption.
+// Set sets.Set is a set of interface,
+// implemented via map[interface{}]struct{} for minimal memory consumption.
 type Set struct {
 	m   map[interface{}]Empty
 	cmp comparator.Comparator
 }
 
-// Option option for New
+// Option option for New.
 type Option func(Set)
 
-// WithItems with git items
+// WithItems with git items.
 func WithItems(items ...interface{}) Option {
 	return func(s Set) {
 		s.Insert(items...)
 	}
 }
 
-// WithComparator with user's Comparator
+// WithComparator with user's Comparator.
 func WithComparator(cmp comparator.Comparator) Option {
 	return func(s Set) {
 		s.cmp = cmp
@@ -99,7 +100,7 @@ func (s Set) ContainsAny(items ...interface{}) bool {
 // s1 = {a1, a2, a3}
 // s2 = {a1, a2, a4, a5}
 // s1.Difference(s2) = {a3}
-// s2.Difference(s1) = {a4, a5}
+// s2.Difference(s1) = {a4, a5}.
 func (s Set) Difference(s2 Set) Set {
 	result := New()
 	for key := range s.m {
@@ -115,10 +116,10 @@ func (s Set) Difference(s2 Set) Set {
 // s1 = {a1, a2}
 // s2 = {a3, a4}
 // s1.Union(s2) = {a1, a2, a3, a4}
-// s2.Union(s1) = {a1, a2, a3, a4}
-func (s1 Set) Union(s2 Set) Set {
+// s2.Union(s1) = {a1, a2, a3, a4}.
+func (s Set) Union(s2 Set) Set {
 	result := New()
-	for key := range s1.m {
+	for key := range s.m {
 		result.Insert(key)
 	}
 	for key := range s2.m {
@@ -131,16 +132,16 @@ func (s1 Set) Union(s2 Set) Set {
 // For example:
 // s1 = {a1, a2}
 // s2 = {a2, a3}
-// s1.Intersection(s2) = {a2}
-func (s1 Set) Intersection(s2 Set) Set {
+// s1.Intersection(s2) = {a2}.
+func (s Set) Intersection(s2 Set) Set {
 	var walk, other Set
 	result := New()
-	if s1.Len() < s2.Len() {
-		walk = s1
+	if s.Len() < s2.Len() {
+		walk = s
 		other = s2
 	} else {
 		walk = s2
-		other = s1
+		other = s
 	}
 	for key := range walk.m {
 		if other.Contains(key) {
@@ -151,9 +152,9 @@ func (s1 Set) Intersection(s2 Set) Set {
 }
 
 // IsSuperset returns true if and only if s1 is a superset of s2.
-func (s1 Set) IsSuperset(s2 Set) bool {
+func (s Set) IsSuperset(s2 Set) bool {
 	for item := range s2.m {
-		if !s1.Contains(item) {
+		if !s.Contains(item) {
 			return false
 		}
 	}
@@ -178,9 +179,9 @@ func (s Set) UnsortedList() []interface{} {
 
 // Equal returns true if and only if s1 is equal (as a set) to s2.
 // Two sets are equal if their membership is identical.
-// (In practice, this means same elements, order doesn't matter)
-func (s1 Set) Equal(s2 Set) bool {
-	return len(s1.m) == len(s2.m) && s1.IsSuperset(s2)
+// (In practice, this means same elements, order doesn't matter).
+func (s Set) Equal(s2 Set) bool {
+	return len(s.m) == len(s2.m) && s.IsSuperset(s2)
 }
 
 // PopAny Returns a single element from the set.

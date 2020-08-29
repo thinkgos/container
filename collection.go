@@ -62,11 +62,11 @@ type List interface {
 	// Remove removes the element at the specified position in this list.
 	// It returns an error if the index is out of range.
 	Remove(index int) (interface{}, error)
-	// RemoveValue removes the first occurence of the specified element from this list, if it is present.
+	// RemoveValue removes the first occurrence of the specified element from this list, if it is present.
 	// It returns false if the target value isn't present, otherwise returns true.
 	RemoveValue(val interface{}) bool
 
-	// Get returns the element at the specified positon in this list. The index must be in the range of [0, size).
+	// Get returns the element at the specified position in this list. The index must be in the range of [0, size).
 	Get(index int) (interface{}, error)
 	// Peek return the front element value
 	Peek() interface{}
@@ -82,7 +82,8 @@ type List interface {
 
 	// Contains returns true if this list contains the specified element.
 	Contains(val interface{}) bool
-	// Sort sorts the element using default options below. It sorts the elements into ascending sequence according to their natural ordering.
+	// Sort sorts the element using default options below.
+	// It sorts the elements into ascending sequence according to their natural ordering.
 	Sort(reverse ...bool)
 	// Values get a copy of all the values in the list
 	Values() []interface{}

@@ -118,7 +118,6 @@ func TestUserCompare(t *testing.T) {
 	ok := ll.RemoveValue(&linkedListNode{age: 20})
 	assert.True(t, ok)
 	assert.Equal(t, 3, ll.Len())
-
 }
 
 func TestLinkedListIterator(t *testing.T) {
