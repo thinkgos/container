@@ -230,12 +230,12 @@ func (sf *LinkedList) getElement(index int) *list.Element {
 	var e *list.Element
 
 	if i, length := 0, sf.Len(); index < (length >> 1) {
-		for i, e = 0, sf.l.Front(); i < index; {
-			i, e = i+1, e.Next()
+		for i, e = 0, sf.l.Front(); i < index; i++ {
+			e = e.Next()
 		}
 	} else {
-		for i, e = length-1, sf.l.Back(); i > index; {
-			i, e = i-1, e.Prev()
+		for i, e = length-1, sf.l.Back(); i > index; i-- {
+			e = e.Prev()
 		}
 	}
 	return e
