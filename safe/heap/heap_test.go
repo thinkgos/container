@@ -43,7 +43,7 @@ func compareInts(val1, val2 interface{}) bool {
 
 // TestHeapBasic tests Heap invariant and synchronization.
 func TestHeapBasic(t *testing.T) {
-	h := NewHeap(testHeapObjectKeyFunc, compareInts)
+	h := New(testHeapObjectKeyFunc, compareInts)
 	var wg sync.WaitGroup
 	wg.Add(2)
 	const amount = 500
@@ -78,7 +78,7 @@ func TestHeapBasic(t *testing.T) {
 
 // Tests Heap.Push and ensures that heap invariant is preserved after adding items.
 func TestHeap_Add(t *testing.T) {
-	h := NewHeap(testHeapObjectKeyFunc, compareInts)
+	h := New(testHeapObjectKeyFunc, compareInts)
 	h.Add(mkHeapObj("foo", 10)) // nolint: errcheck
 	h.Add(mkHeapObj("bar", 1))  // nolint: errcheck
 	h.Add(mkHeapObj("baz", 11)) // nolint: errcheck
@@ -110,7 +110,7 @@ func TestHeap_Add(t *testing.T) {
 // TestHeap_BulkAdd tests Heap.BulkAdd functionality and ensures that all the
 // items given to BulkAdd are added to the queue before Pop reads them.
 func TestHeap_BulkAdd(t *testing.T) {
-	h := NewHeap(testHeapObjectKeyFunc, compareInts)
+	h := New(testHeapObjectKeyFunc, compareInts)
 	const amount = 500
 	// Insert items in the heap in opposite orders in a go routine.
 	go func() {
@@ -134,7 +134,7 @@ func TestHeap_BulkAdd(t *testing.T) {
 
 // TestHeapEmptyPop tests that pop returns properly after heap is closed.
 func TestHeapEmptyPop(t *testing.T) {
-	h := NewHeap(testHeapObjectKeyFunc, compareInts)
+	h := New(testHeapObjectKeyFunc, compareInts)
 	go func() {
 		time.Sleep(1 * time.Second)
 		h.Close()
@@ -148,7 +148,7 @@ func TestHeapEmptyPop(t *testing.T) {
 // TestHeap_AddIfNotPresent tests Heap.AddIfNotPresent and ensures that heap
 // invariant is preserved after adding items.
 func TestHeap_AddIfNotPresent(t *testing.T) {
-	h := NewHeap(testHeapObjectKeyFunc, compareInts)
+	h := New(testHeapObjectKeyFunc, compareInts)
 	h.AddIfNotPresent(mkHeapObj("foo", 10)) // nolint: errcheck
 	h.AddIfNotPresent(mkHeapObj("bar", 1))  // nolint: errcheck
 	h.AddIfNotPresent(mkHeapObj("baz", 11)) // nolint: errcheck
@@ -185,7 +185,7 @@ func TestHeap_AddIfNotPresent(t *testing.T) {
 // TestHeap_Delete tests Heap.Delete and ensures that heap invariant is
 // preserved after deleting items.
 func TestHeap_Delete(t *testing.T) {
-	h := NewHeap(testHeapObjectKeyFunc, compareInts)
+	h := New(testHeapObjectKeyFunc, compareInts)
 	h.Add(mkHeapObj("foo", 10)) // nolint: errcheck
 	h.Add(mkHeapObj("bar", 1))  // nolint: errcheck
 	h.Add(mkHeapObj("bal", 31)) // nolint: errcheck
@@ -230,7 +230,7 @@ func TestHeap_Delete(t *testing.T) {
 // TestHeap_Update tests Heap.Update and ensures that heap invariant is
 // preserved after adding items.
 func TestHeap_Update(t *testing.T) {
-	h := NewHeap(testHeapObjectKeyFunc, compareInts)
+	h := New(testHeapObjectKeyFunc, compareInts)
 	h.Add(mkHeapObj("foo", 10)) // nolint: errcheck
 	h.Add(mkHeapObj("bar", 1))  // nolint: errcheck
 	h.Add(mkHeapObj("bal", 31)) // nolint: errcheck
@@ -254,7 +254,7 @@ func TestHeap_Update(t *testing.T) {
 
 // TestHeap_Get tests Heap.Get.
 func TestHeap_Get(t *testing.T) {
-	h := NewHeap(testHeapObjectKeyFunc, compareInts)
+	h := New(testHeapObjectKeyFunc, compareInts)
 	h.Add(mkHeapObj("foo", 10)) // nolint: errcheck
 	h.Add(mkHeapObj("bar", 1))  // nolint: errcheck
 	h.Add(mkHeapObj("bal", 31)) // nolint: errcheck
@@ -274,7 +274,7 @@ func TestHeap_Get(t *testing.T) {
 
 // TestHeap_GetByKey tests Heap.GetByKey and is very similar to TestHeap_Get.
 func TestHeap_GetByKey(t *testing.T) {
-	h := NewHeap(testHeapObjectKeyFunc, compareInts)
+	h := New(testHeapObjectKeyFunc, compareInts)
 	h.Add(mkHeapObj("foo", 10)) // nolint: errcheck
 	h.Add(mkHeapObj("bar", 1))  // nolint: errcheck
 	h.Add(mkHeapObj("bal", 31)) // nolint: errcheck
@@ -293,7 +293,7 @@ func TestHeap_GetByKey(t *testing.T) {
 
 // TestHeap_Close tests Heap.Close and Heap.IsClosed functions.
 func TestHeap_Close(t *testing.T) {
-	h := NewHeap(testHeapObjectKeyFunc, compareInts)
+	h := New(testHeapObjectKeyFunc, compareInts)
 	h.Add(mkHeapObj("foo", 10)) // nolint: errcheck
 	h.Add(mkHeapObj("bar", 1))  // nolint: errcheck
 
@@ -308,7 +308,7 @@ func TestHeap_Close(t *testing.T) {
 
 // TestHeap_List tests Heap.List function.
 func TestHeap_List(t *testing.T) {
-	h := NewHeap(testHeapObjectKeyFunc, compareInts)
+	h := New(testHeapObjectKeyFunc, compareInts)
 	list := h.List()
 	if len(list) != 0 {
 		t.Errorf("expected an empty list")
@@ -340,7 +340,7 @@ func TestHeap_List(t *testing.T) {
 // TestHeap_ListKeys tests Heap.ListKeys function. Scenario is the same as
 // TestHeap_list.
 func TestHeap_ListKeys(t *testing.T) {
-	h := NewHeap(testHeapObjectKeyFunc, compareInts)
+	h := New(testHeapObjectKeyFunc, compareInts)
 	list := h.ListKeys()
 	if len(list) != 0 {
 		t.Errorf("expected an empty list")
@@ -371,7 +371,7 @@ func TestHeap_ListKeys(t *testing.T) {
 // TestHeapAddAfterClose tests that heap returns an error if anything is added
 // after it is closed.
 func TestHeapAddAfterClose(t *testing.T) {
-	h := NewHeap(testHeapObjectKeyFunc, compareInts)
+	h := New(testHeapObjectKeyFunc, compareInts)
 	h.Close()
 	if err := h.Add(mkHeapObj("test", 1)); err == nil || err.Error() != closedMsg {
 		t.Errorf("expected heap closed error")

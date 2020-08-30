@@ -38,7 +38,7 @@ func mkFifoObj(name string, val interface{}) testFifoObject {
 }
 
 func TestFIFO_basic(t *testing.T) {
-	f := NewFIFO(testFifoObjectKeyFunc)
+	f := New(testFifoObjectKeyFunc)
 	const amount = 500
 	go func() {
 		for i := 0; i < amount; i++ {
@@ -73,7 +73,7 @@ func TestFIFO_basic(t *testing.T) {
 }
 
 func TestFIFO_requeueOnPop(t *testing.T) {
-	f := NewFIFO(testFifoObjectKeyFunc)
+	f := New(testFifoObjectKeyFunc)
 
 	f.Add(mkFifoObj("foo", 10)) // nolint: errcheck
 	_, err := f.Pop(func(obj interface{}) error {
@@ -117,7 +117,7 @@ func TestFIFO_requeueOnPop(t *testing.T) {
 }
 
 func TestFIFO_addUpdate(t *testing.T) {
-	f := NewFIFO(testFifoObjectKeyFunc)
+	f := New(testFifoObjectKeyFunc)
 	f.Add(mkFifoObj("foo", 10))    // nolint: errcheck
 	f.Update(mkFifoObj("foo", 15)) // nolint: errcheck
 
@@ -151,7 +151,7 @@ func TestFIFO_addUpdate(t *testing.T) {
 }
 
 func TestFIFO_addReplace(t *testing.T) {
-	f := NewFIFO(testFifoObjectKeyFunc)
+	f := New(testFifoObjectKeyFunc)
 	f.Add(mkFifoObj("foo", 10))                          // nolint: errcheck
 	f.Replace([]interface{}{mkFifoObj("foo", 15)}, "15") // nolint: errcheck
 	got := make(chan testFifoObject, 2)
@@ -177,7 +177,7 @@ func TestFIFO_addReplace(t *testing.T) {
 }
 
 func TestFIFO_detectLineJumpers(t *testing.T) {
-	f := NewFIFO(testFifoObjectKeyFunc)
+	f := New(testFifoObjectKeyFunc)
 
 	f.Add(mkFifoObj("foo", 10)) // nolint: errcheck
 	f.Add(mkFifoObj("bar", 1))  // nolint: errcheck
@@ -205,7 +205,7 @@ func TestFIFO_detectLineJumpers(t *testing.T) {
 }
 
 func TestFIFO_addIfNotPresent(t *testing.T) {
-	f := NewFIFO(testFifoObjectKeyFunc)
+	f := New(testFifoObjectKeyFunc)
 
 	f.Add(mkFifoObj("a", 1))             // nolint: errcheck
 	f.Add(mkFifoObj("b", 2))             // nolint: errcheck
@@ -279,7 +279,7 @@ func TestFIFO_HasSynced(t *testing.T) {
 	}
 
 	for i, test := range tests {
-		f := NewFIFO(testFifoObjectKeyFunc)
+		f := New(testFifoObjectKeyFunc)
 
 		for _, action := range test.actions {
 			action(f)
@@ -293,7 +293,7 @@ func TestFIFO_HasSynced(t *testing.T) {
 // TestFIFO_PopShouldUnblockWhenClosed checks that any blocking Pop on an empty queue
 // should unblock and return after Close is called.
 func TestFIFO_PopShouldUnblockWhenClosed(t *testing.T) {
-	f := NewFIFO(testFifoObjectKeyFunc)
+	f := New(testFifoObjectKeyFunc)
 
 	c := make(chan struct{})
 	const jobs = 10

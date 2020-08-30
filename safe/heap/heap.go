@@ -26,9 +26,7 @@ import (
 	"github.com/thinkgos/container"
 )
 
-const (
-	closedMsg = "heap is closed"
-)
+const closedMsg = "heap is closed"
 
 // LessFunc is used to compare two objects in the heap.
 type LessFunc func(interface{}, interface{}) bool
@@ -61,9 +59,7 @@ type heapData struct {
 	lessFunc LessFunc
 }
 
-var (
-	_ = heap.Interface(&heapData{}) // heapData is a standard heap
-)
+var _ heap.Interface = (*heapData)(nil) // heapData is a standard heap
 
 // Less compares two objects and returns true if the first one should go
 // in front of the second one in the heap.
@@ -131,6 +127,20 @@ type Heap struct {
 	closed bool
 }
 
+// New returns a Heap which can be used to queue up items to process.
+func New(keyFn container.KeyFunc, lessFn LessFunc) *Heap {
+	h := &Heap{
+		data: &heapData{
+			items:    map[string]*heapItem{},
+			queue:    []string{},
+			keyFunc:  keyFn,
+			lessFunc: lessFn,
+		},
+	}
+	h.cond.L = &h.lock
+	return h
+}
+
 // Close the Heap and signals condition variables that may be waiting to pop
 // items from the heap.
 func (h *Heap) Close() {
@@ -138,6 +148,13 @@ func (h *Heap) Close() {
 	defer h.lock.Unlock()
 	h.closed = true
 	h.cond.Broadcast()
+}
+
+// IsClosed returns true if the queue is closed.
+func (h *Heap) IsClosed() bool {
+	h.lock.RLock()
+	defer h.lock.RUnlock()
+	return h.closed
 }
 
 // Add inserts an item, and puts it in the queue. The item is updated if it
@@ -300,25 +317,4 @@ func (h *Heap) GetByKey(key string) (interface{}, bool, error) {
 		return nil, false, nil
 	}
 	return item.obj, true, nil
-}
-
-// IsClosed returns true if the queue is closed.
-func (h *Heap) IsClosed() bool {
-	h.lock.RLock()
-	defer h.lock.RUnlock()
-	return h.closed
-}
-
-// NewHeap returns a Heap which can be used to queue up items to process.
-func NewHeap(keyFn container.KeyFunc, lessFn LessFunc) *Heap {
-	h := &Heap{
-		data: &heapData{
-			items:    map[string]*heapItem{},
-			queue:    []string{},
-			keyFunc:  keyFn,
-			lessFunc: lessFn,
-		},
-	}
-	h.cond.L = &h.lock
-	return h
 }
