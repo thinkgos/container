@@ -97,7 +97,6 @@ func TestUint64SetDeleteMultiples(t *testing.T) {
 	if !s.Contains(2) {
 		t.Errorf("Missing contents: %#v", s)
 	}
-
 }
 
 func TestNewUint64Set(t *testing.T) {

@@ -97,7 +97,6 @@ func TestUint8SetDeleteMultiples(t *testing.T) {
 	if !s.Contains(2) {
 		t.Errorf("Missing contents: %#v", s)
 	}
-
 }
 
 func TestNewUint8Set(t *testing.T) {

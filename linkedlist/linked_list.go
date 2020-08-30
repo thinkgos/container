@@ -196,7 +196,7 @@ func (sf *LinkedList) Contains(val interface{}) bool {
 
 // Sort sort the list.
 func (sf *LinkedList) Sort(reverse ...bool) {
-	if sf.Len() < 2 {
+	if sf.Len() <= 1 {
 		return
 	}
 

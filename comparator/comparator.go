@@ -40,7 +40,7 @@ func Compare(v1, v2 interface{}) int {
 	}
 
 	cmpRet := 0
-	switch k1 {
+	switch k1 { // nolint: exhaustive
 	case reflect.Int:
 		cv1, cv2 := v1.(int), v2.(int)
 		if cv1 < cv2 {

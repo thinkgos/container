@@ -217,7 +217,7 @@ func (sf *List) Contains(val interface{}) bool {
 
 // Sort sort the list.
 func (sf *List) Sort(reverse ...bool) {
-	if sf.Len() < 2 {
+	if sf.Len() <= 1 {
 		return
 	}
 	comparator.Sort(sf.items, sf.cmp, reverse...)
