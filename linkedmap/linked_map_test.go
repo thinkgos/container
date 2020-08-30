@@ -26,7 +26,7 @@ func TestLinkedMapLen(t *testing.T) {
 	lm.Push(24, "benjamin")
 	lm.Push(43, "alice")
 	lm.Push(18, "john")
-	assert.Equal(t, 0, lm.cap)
+	assert.Equal(t, 0, lm.capacity)
 	assert.Equal(t, 3, lm.Len())
 
 	// exist
@@ -44,7 +44,7 @@ func TestLinkedMapLen(t *testing.T) {
 	require.Equal(t, 0, lm.Len())
 	require.True(t, lm.IsEmpty())
 
-	// over cap
+	// over capacity
 	lm = New(WithCap(3))
 
 	// not exist
@@ -92,7 +92,7 @@ func TestLinkedMapLen(t *testing.T) {
 	assert.Equal(t, 99, k)
 	assert.Equal(t, "noexist", v)
 
-	// last check len and cap
+	// last check len and capacity
 	assert.Equal(t, 3, lm.Cap())
 	assert.Equal(t, 3, lm.Len())
 }

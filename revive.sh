@@ -1,3 +1,3 @@
 #!/bin/bash
 revive -config .revive.toml  -formatter friendly ./...
-golangci-lint run --out-format=line-number -E goimports -E misspell -E godot -E lll
+golangci-lint run

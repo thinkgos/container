@@ -49,12 +49,7 @@ func WithMaxHeap(b bool) Option {
 
 // New initializes and returns an Queue, default min heap.
 func New(opts ...Option) *Queue {
-	q := &Queue{
-		ctn: &comparator.Container{
-			Items:   []interface{}{},
-			Reverse: false,
-		},
-	}
+	q := &Queue{new(comparator.Container)}
 	for _, opt := range opts {
 		opt(q)
 	}
@@ -68,7 +63,7 @@ func (sf *Queue) Len() int { return sf.ctn.Len() }
 func (sf *Queue) IsEmpty() bool { return sf.Len() == 0 }
 
 // Clear removes all of the elements from this priority queue.
-func (sf *Queue) Clear() { sf.ctn.Items = make([]interface{}, 0) }
+func (sf *Queue) Clear() { sf.ctn.Items = nil }
 
 // Add inserts the specified element into this priority queue.
 func (sf *Queue) Add(items interface{}) {
