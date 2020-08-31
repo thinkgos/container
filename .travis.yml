@@ -1,14 +1,16 @@
 language: go
 
 os:
-  - linux
   - osx
   - windows
+  - linux
 
 go:
   - 1.13.x
   - 1.14.x
   - 1.15.x
+
+go_import_path: github.com/thinkgos/container
 
 before_install:
   - if [[ "${GO111MODULE}" = "on" ]]; then mkdir "${HOME}/go"; export GOPATH="${HOME}/go";
@@ -34,8 +36,11 @@ script:
   - go test -v -benchmem -test.bench=".*" -coverprofile=coverage.txt -covermode=atomic  ./...
 
 after_success:
-  - bash <(curl -s https://codecov.io/bash)
+  - if [[ "$TRAVIS_OS_NAME" == "windows" ]]; then curl -s https://codecov.io/bash >
+    .codecov && chmod +x .codecov && ./.codecov; else bash <(curl -s https://codecov.io/bash);
+    fi
 
 env:
   global:
     - GO111MODULE=on
+    - secure: jQj3SCy18c/LOoQkBzEJeqJvDD0WVqnuC6KW9YwQOOVjph0Uwe+EAUrkYMdKTtb9AodC0qxc0y0ltOHWwZzlwrr0ia215DW9jOj7ra9z2iRs9Gda17TS7cQapFdiIa5Jmfe4D2Pn5rS11IjEl0PVOpOnS8RKKMusbbBlAIjAbQWQj7woyByEGtbrMihIJhw5408Bpxo4qQb5RhO/U8oZt+a9PvTLLKkWSbKwkRPWjGyapN8UKPYWwipQPvCx6SvHZRu28zJre8w60/a21QwJ+IR5E1NnymKjmrrpNWe8L1Z5BG8FDoPX8tT+WVrMwTEHPHXKWr0Ur4tILQLUPM4NVhxa3LjX1uaxma6Y6TM9Anr02xl7XR0GRExxXbqdPJKcjpPGtlnQjtsepbHOKbEHzt/h0MyhvkIr6v67QQewrlwMryE/OncUx1H5GzN+OqcxqAQqD4m+N3UAPT+tioTf41jR8iSXqg1I6KZQYWg8r5n4MKhH0prujVwd5BdWnVJ3NYaxjiZWjUWqA+njqfSC7+WXKAWaQNT3PqRQvh6Q+974FG15ZA1/YQGqTrTL9pzxCvmN7hmyMc/CrdRCJwJQNjUpLgU1gP6aTf6vSFqgmaBBsLttsyeaDElb0AhZ4Qb8Ww1l8HhMjeU8xSghPkCO4yaHDK1QAMveYqIXqCzCHbo=
