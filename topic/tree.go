@@ -90,25 +90,21 @@ func (t *Tree) add(value interface{}, topic string, node *node) {
 				return
 			}
 		}
-
 		// add value
 		node.values = append(node.values, value)
-
 		return
 	}
 
 	// get segment
-	segment := topicSegment(topic, t.separator)
-
+	segment, shorten := segmentShorten(topic, t.separator)
 	// get child
 	child, ok := node.children[segment]
 	if !ok {
 		child = newNode()
 		node.children[segment] = child
 	}
-
 	// descend
-	t.add(value, topicShorten(topic, t.separator), child)
+	t.add(value, shorten, child)
 }
 
 // Set sets the supplied value as the only value for the supplied topic. This
@@ -126,17 +122,15 @@ func (t *Tree) set(value interface{}, topic string, node *node) {
 	}
 
 	// get segment
-	segment := topicSegment(topic, t.separator)
-
+	segment, shorten := segmentShorten(topic, t.separator)
 	// get child
 	child, ok := node.children[segment]
 	if !ok {
 		child = newNode()
 		node.children[segment] = child
 	}
-
 	// descend
-	t.set(value, topicShorten(topic, t.separator), child)
+	t.set(value, shorten, child)
 }
 
 // Get gets the values from the topic that exactly matches the supplied topics.
@@ -151,16 +145,14 @@ func (t *Tree) get(topic string, node *node) []interface{} {
 	}
 
 	// get segment
-	segment := topicSegment(topic, t.separator)
-
+	segment, shorten := segmentShorten(topic, t.separator)
 	// get child
 	child, ok := node.children[segment]
 	if !ok {
 		return nil
 	}
-
 	// descend
-	return t.get(topicShorten(topic, t.separator), child)
+	return t.get(shorten, child)
 }
 
 // Remove un-registers the value from the supplied topic. This function will
@@ -185,13 +177,11 @@ func (t *Tree) remove(value interface{}, topic string, node *node) bool {
 		} else {
 			node.removeValue(value)
 		}
-
 		return len(node.values) == 0 && len(node.children) == 0
 	}
 
 	// get segment
-	segment := topicSegment(topic, t.separator)
-
+	segment, shorten := segmentShorten(topic, t.separator)
 	// get child
 	child, ok := node.children[segment]
 	if !ok {
@@ -199,10 +189,9 @@ func (t *Tree) remove(value interface{}, topic string, node *node) bool {
 	}
 
 	// descend and remove node if empty
-	if t.remove(value, topicShorten(topic, t.separator), child) {
+	if t.remove(value, shorten, child) {
 		delete(node.children, segment)
 	}
-
 	return len(node.values) == 0 && len(node.children) == 0
 }
 
@@ -268,22 +257,20 @@ func (t *Tree) match(topic string, node *node, fn func([]interface{}) bool) {
 		if len(node.values) > 0 {
 			fn(node.values)
 		}
-
 		return
 	}
+	// get segment
+	segment, shorten := segmentShorten(topic, t.separator)
 
 	// advance children that match a single level
 	if child, ok := node.children[t.wildcardOne]; ok {
-		t.match(topicShorten(topic, t.separator), child, fn)
+		t.match(shorten, child, fn)
 	}
-
-	// get segment
-	segment := topicSegment(topic, t.separator)
 
 	// match segments and get children
 	if segment != t.wildcardOne && segment != t.wildcardSome {
 		if child, ok := node.children[segment]; ok {
-			t.match(topicShorten(topic, t.separator), child, fn)
+			t.match(shorten, child, fn)
 		}
 	}
 }
@@ -322,12 +309,11 @@ func (t *Tree) search(topic string, node *node, fn func([]interface{}) bool) {
 		if len(node.values) > 0 {
 			fn(node.values)
 		}
-
 		return
 	}
 
 	// get segment
-	segment := topicSegment(topic, t.separator)
+	segment, shorten := segmentShorten(topic, t.separator)
 
 	// add all current and further values
 	if segment == t.wildcardSome {
@@ -351,14 +337,14 @@ func (t *Tree) search(topic string, node *node, fn func([]interface{}) bool) {
 		}
 
 		for _, child := range node.children {
-			t.search(topicShorten(topic, t.separator), child, fn)
+			t.search(shorten, child, fn)
 		}
 	}
 
 	// match segments and get children
 	if segment != t.wildcardOne && segment != t.wildcardSome {
 		if child, ok := node.children[segment]; ok {
-			t.search(topicShorten(topic, t.separator), child, fn)
+			t.search(shorten, child, fn)
 		}
 	}
 }
@@ -431,19 +417,10 @@ func contains(list []interface{}, value interface{}) bool {
 
 var topicEnd = "\x00"
 
-func topicShorten(topic, separator string) string {
+func segmentShorten(topic, separator string) (seg, shorten string) {
 	i := strings.Index(topic, separator)
 	if i >= 0 {
-		return topic[i+1:]
+		return topic[:i], topic[i+1:]
 	}
-
-	return topicEnd
-}
-
-func topicSegment(topic, separator string) string {
-	i := strings.Index(topic, separator)
-	if i >= 0 {
-		return topic[:i]
-	}
-	return topic
+	return topic, topicEnd
 }
