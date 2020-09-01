@@ -35,8 +35,7 @@ func Parse(topic string, allowWildcards bool) (string, error) {
 	}
 
 	// get first segment
-	remainder := topic
-	segment := topicSegment(topic, "/")
+	segment, remainder := segmentShorten(topic, "/")
 
 	// check all segments
 	for segment != topicEnd {
@@ -51,13 +50,12 @@ func Parse(topic string, allowWildcards bool) (string, error) {
 		}
 
 		// check if hash is the last character
-		if segment == "#" && topicShorten(remainder, "/") != topicEnd {
+		if segment == "#" && remainder != topicEnd {
 			return "", ErrWildcards
 		}
 
 		// get next segment
-		remainder = topicShorten(remainder, "/")
-		segment = topicSegment(remainder, "/")
+		segment, remainder = segmentShorten(remainder, "/")
 	}
 
 	return topic, nil
