@@ -115,10 +115,11 @@ func (sf *List) Poll() interface{} {
 func (sf *List) PollFront() interface{} {
 	var val interface{}
 
-	if len(sf.items) > 0 {
+	if n := len(sf.items); n > 0 {
 		moveFirstToLast(sf.items)
-		val = sf.items[len(sf.items)-1]
-		sf.items = sf.items[:len(sf.items)-1]
+		val = sf.items[n-1]
+		sf.items[n-1] = nil // for gc
+		sf.items = sf.items[:n-1]
 	}
 	return val
 }
@@ -127,9 +128,10 @@ func (sf *List) PollFront() interface{} {
 func (sf *List) PollBack() interface{} {
 	var val interface{}
 
-	if len(sf.items) > 0 {
-		val = sf.items[len(sf.items)-1]
-		sf.items = sf.items[:len(sf.items)-1]
+	if n := len(sf.items); n > 0 {
+		val = sf.items[n-1]
+		sf.items[n-1] = nil // for gc
+		sf.items = sf.items[:n-1]
 	}
 	return val
 }
@@ -142,7 +144,10 @@ func (sf *List) Remove(index int) (interface{}, error) {
 	}
 
 	val := sf.items[index]
-	sf.items = append(sf.items[:index], sf.items[(index+1):]...)
+	// sf.items = append(sf.items[:index], sf.items[(index+1):]...)
+	moveLastToFirst(sf.items[index:])
+	sf.items[len(sf.items)-1] = nil
+	sf.items = sf.items[:len(sf.items)-1]
 	sf.shrinkList()
 	return val, nil
 }
@@ -155,7 +160,10 @@ func (sf *List) RemoveValue(val interface{}) bool {
 	}
 
 	if idx := sf.indexOf(val); idx >= 0 {
-		sf.items = append(sf.items[:idx], sf.items[(idx+1):]...)
+		// sf.items = append(sf.items[:idx], sf.items[(idx+1):]...)
+		moveLastToFirst(sf.items[idx:])
+		sf.items[len(sf.items)-1] = nil
+		sf.items = sf.items[:len(sf.items)-1]
 		sf.shrinkList()
 		return true
 	}

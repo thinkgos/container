@@ -24,6 +24,8 @@ container implements some containers, currently the containers are not thread-sa
   - [LinkedList](#linkedlist) use container/list
   - [ArrayList](#arraylist) use builtin slice.
   - [LinkedMap](#linkedMap) use container/list and builtin map.
+  - [topic](#topic) topic tree like MQTT topic
+  - [trie](#trie) trie tree
 - **[safe container](#safe-container)**
   - [fifo](#fifo) 
     > FIFO solves this use case:
