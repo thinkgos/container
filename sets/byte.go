@@ -202,3 +202,24 @@ func (s Byte) Len() int {
 func lessByte(lhs, rhs byte) bool {
 	return lhs < rhs
 }
+
+// Each traverses the items in the Set, calling the provided function for each
+// set member. Traversal will continue until all items in the Set have been
+// visited, or if the closure returns false.
+func (s Byte) Each(f func(item interface{}) bool) {
+	for item := range s {
+		if !f(item) {
+			break
+		}
+	}
+}
+
+// Clone returns a new Set with a copy of s.
+func (s Byte) Clone() Byte {
+	ns := NewByte()
+	s.Each(func(item interface{}) bool {
+		ns[item.(byte)] = Empty{}
+		return true
+	})
+	return ns
+}

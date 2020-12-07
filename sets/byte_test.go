@@ -19,6 +19,8 @@ package sets
 import (
 	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/require"
 )
 
 func TestByteSet(t *testing.T) {
@@ -285,4 +287,20 @@ func TestByteIntersection(t *testing.T) {
 				intersection.List(), test.expected.List())
 		}
 	}
+}
+
+func TestByte_Each(t *testing.T) {
+	expect := NewByte(1, 2, 3, 4)
+	s1 := NewByte(1, 2, 3, 4)
+	s1.Each(func(item interface{}) bool {
+		require.True(t, expect.Contains(item.(byte)))
+		return item.(byte) != 3
+	})
+}
+
+func TestByte_Clone(t *testing.T) {
+	s1 := NewByte(1, 2, 3, 4)
+	s2 := s1.Clone()
+
+	require.True(t, s1.Equal(s2))
 }

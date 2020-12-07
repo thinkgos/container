@@ -23,7 +23,7 @@ func WithItems(items ...interface{}) Option {
 	}
 }
 
-// WithComparator with user's Comparator.
+// WithComparator with user's Comparator for sort
 func WithComparator(cmp comparator.Comparator) Option {
 	return func(s Set) {
 		s.cmp = cmp
@@ -43,9 +43,9 @@ func New(opts ...Option) Set {
 
 // SetKey creates a interface{} from a keys of a map[interface{}](? extends interface{}).
 // If the value passed in is not actually a map, this will panic.
-func SetKey(theMap interface{}) Set {
+func SetKey(theMap interface{}, opts ...Option) Set {
 	v := reflect.ValueOf(theMap)
-	ret := New()
+	ret := New(opts...)
 
 	for _, keyValue := range v.MapKeys() {
 		ret.Insert(keyValue.Interface())
@@ -102,7 +102,7 @@ func (s Set) ContainsAny(items ...interface{}) bool {
 // s1.Difference(s2) = {a3}
 // s2.Difference(s1) = {a4, a5}.
 func (s Set) Difference(s2 Set) Set {
-	result := New()
+	result := New(WithComparator(s.cmp))
 	for key := range s.m {
 		if !s2.Contains(key) {
 			result.Insert(key)
@@ -118,7 +118,7 @@ func (s Set) Difference(s2 Set) Set {
 // s1.Union(s2) = {a1, a2, a3, a4}
 // s2.Union(s1) = {a1, a2, a3, a4}.
 func (s Set) Union(s2 Set) Set {
-	result := New()
+	result := New(WithComparator(s.cmp))
 	for key := range s.m {
 		result.Insert(key)
 	}
@@ -135,7 +135,7 @@ func (s Set) Union(s2 Set) Set {
 // s1.Intersection(s2) = {a2}.
 func (s Set) Intersection(s2 Set) Set {
 	var walk, other Set
-	result := New()
+	result := New(WithComparator(s.cmp))
 	if s.Len() < s2.Len() {
 		walk = s
 		other = s2
@@ -149,6 +149,20 @@ func (s Set) Intersection(s2 Set) Set {
 		}
 	}
 	return result
+}
+
+// Merge is like Union, however it modifies the current set it's applied on
+// with the given s2 set.
+// For example:
+// s1 = {a1, a2}
+// s2 = {a3, a4}
+// s1.Merge(s2), s1 = {a1, a2, a3, a4}
+// s2.Merge(s1), s2 = {a1, a2, a3, a4}.
+func (s Set) Merge(s2 Set) {
+	s2.Each(func(item interface{}) bool {
+		s.m[item] = Empty{}
+		return true
+	})
 }
 
 // IsSuperset returns true if and only if s1 is a superset of s2.
@@ -196,4 +210,25 @@ func (s Set) PopAny() (interface{}, bool) {
 // Len returns the size of the set.
 func (s Set) Len() int {
 	return len(s.m)
+}
+
+// Each traverses the items in the Set, calling the provided function for each
+// set member. Traversal will continue until all items in the Set have been
+// visited, or if the closure returns false.
+func (s Set) Each(f func(item interface{}) bool) {
+	for item := range s.m {
+		if !f(item) {
+			break
+		}
+	}
+}
+
+// Clone returns a new Set with a copy of s.
+func (s Set) Clone() Set {
+	ns := New(WithComparator(s.cmp))
+	s.Each(func(item interface{}) bool {
+		ns.m[item] = Empty{}
+		return true
+	})
+	return ns
 }

@@ -19,6 +19,8 @@ package sets
 import (
 	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/require"
 )
 
 func TestStringSet(t *testing.T) {
@@ -285,4 +287,19 @@ func TestStringIntersection(t *testing.T) {
 				intersection.List(), test.expected.List())
 		}
 	}
+}
+func TestString_Each(t *testing.T) {
+	expect := NewString("1", "2", "3", "4")
+	s1 := NewString("1", "2", "3", "4")
+	s1.Each(func(item interface{}) bool {
+		require.True(t, expect.Contains(item.(string)))
+		return item.(string) != "3"
+	})
+}
+
+func TestString_Clone(t *testing.T) {
+	s1 := NewString("1", "2", "3", "4")
+	s2 := s1.Clone()
+
+	require.True(t, s1.Equal(s2))
 }

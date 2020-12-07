@@ -202,3 +202,24 @@ func (s Int32) Len() int {
 func lessInt32(lhs, rhs int32) bool {
 	return lhs < rhs
 }
+
+// Each traverses the items in the Set, calling the provided function for each
+// set member. Traversal will continue until all items in the Set have been
+// visited, or if the closure returns false.
+func (s Int32) Each(f func(item interface{}) bool) {
+	for item := range s {
+		if !f(item) {
+			break
+		}
+	}
+}
+
+// Clone returns a new Set with a copy of s.
+func (s Int32) Clone() Int32 {
+	ns := NewInt32()
+	s.Each(func(item interface{}) bool {
+		ns[item.(int32)] = Empty{}
+		return true
+	})
+	return ns
+}
