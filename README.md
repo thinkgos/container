@@ -39,3 +39,15 @@ container implements some containers, currently the containers are not thread-sa
   - [Comparator](#Comparator) 
     - [Sort](#sort) sort with Comparator interface
     - [Heap](#heap) heap with Comparator interface
+    
+## Donation
+
+if package help you a lot,you can support us by:
+
+**Alipay**
+
+![alipay](https://github.com/thinkgos/thinkgos/blob/master/asserts/alipay.jpg)
+
+**WeChat Pay**
+
+![wxpay](https://github.com/thinkgos/thinkgos/blob/master/asserts/wxpay.jpg)
