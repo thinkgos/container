@@ -19,6 +19,8 @@ package sets
 import (
 	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/require"
 )
 
 func TestUint16Set(t *testing.T) {
@@ -285,4 +287,19 @@ func TestUint16Intersection(t *testing.T) {
 				intersection.List(), test.expected.List())
 		}
 	}
+}
+func TestUnt16_Each(t *testing.T) {
+	expect := NewUint16(1, 2, 3, 4)
+	s1 := NewUint16(1, 2, 3, 4)
+	s1.Each(func(item interface{}) bool {
+		require.True(t, expect.Contains(item.(uint16)))
+		return item.(uint16) != 3
+	})
+}
+
+func TestUint16_Clone(t *testing.T) {
+	s1 := NewUint16(1, 2, 3, 4)
+	s2 := s1.Clone()
+
+	require.True(t, s1.Equal(s2))
 }

@@ -19,6 +19,8 @@ package sets
 import (
 	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/require"
 )
 
 func TestSet(t *testing.T) {
@@ -300,4 +302,60 @@ func TestIntersection(t *testing.T) {
 				intersection.List(), test.expected.List())
 		}
 	}
+}
+
+func TestMerge(t *testing.T) {
+	tests := []struct {
+		s1       Set
+		s2       Set
+		expected Set
+	}{
+		{
+			New(WithItems("1", "2", "3", "4")),
+			New(WithItems("3", "4", "5", "6")),
+			New(WithItems("1", "2", "3", "4", "5", "6")),
+		},
+		{
+			New(WithItems("1", "2", "3", "4")),
+			New(),
+			New(WithItems("1", "2", "3", "4")),
+		},
+		{
+			New(),
+			New(WithItems("1", "2", "3", "4")),
+			New(WithItems("1", "2", "3", "4")),
+		},
+		{
+			New(),
+			New(),
+			New(),
+		},
+	}
+
+	for _, test := range tests {
+		test.s1.Merge(test.s2)
+		if test.s1.Len() != test.expected.Len() {
+			t.Errorf("Expected union.Len()=%d but got %d", test.expected.Len(), test.s1.Len())
+		}
+
+		if !test.s1.Equal(test.expected) {
+			t.Errorf("Expected union.Equal(expected) but not true.  union:%v expected:%v", test.s1.List(), test.expected.List())
+		}
+	}
+}
+
+func TestSet_Each(t *testing.T) {
+	expect := New(WithItems("1", "2", "3", "4"))
+	s1 := New(WithItems("1", "2", "3", "4"))
+	s1.Each(func(item interface{}) bool {
+		require.True(t, expect.Contains(item))
+		return item.(string) != "3"
+	})
+}
+
+func TestSet_Clone(t *testing.T) {
+	s1 := New(WithItems("1", "2", "3", "4"))
+	s2 := s1.Clone()
+
+	require.True(t, s1.Equal(s2))
 }

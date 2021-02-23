@@ -202,3 +202,24 @@ func (s Uint8) Len() int {
 func lessUint8(lhs, rhs uint8) bool {
 	return lhs < rhs
 }
+
+// Each traverses the items in the Set, calling the provided function for each
+// set member. Traversal will continue until all items in the Set have been
+// visited, or if the closure returns false.
+func (s Uint8) Each(f func(item interface{}) bool) {
+	for item := range s {
+		if !f(item) {
+			break
+		}
+	}
+}
+
+// Clone returns a new Set with a copy of s.
+func (s Uint8) Clone() Uint8 {
+	ns := NewUint8()
+	s.Each(func(item interface{}) bool {
+		ns[item.(uint8)] = Empty{}
+		return true
+	})
+	return ns
+}

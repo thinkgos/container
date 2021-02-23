@@ -202,3 +202,24 @@ func (s String) Len() int {
 func lessString(lhs, rhs string) bool {
 	return lhs < rhs
 }
+
+// Each traverses the items in the Set, calling the provided function for each
+// set member. Traversal will continue until all items in the Set have been
+// visited, or if the closure returns false.
+func (s String) Each(f func(item interface{}) bool) {
+	for item := range s {
+		if !f(item) {
+			break
+		}
+	}
+}
+
+// Clone returns a new Set with a copy of s.
+func (s String) Clone() String {
+	ns := NewString()
+	s.Each(func(item interface{}) bool {
+		ns[item.(string)] = Empty{}
+		return true
+	})
+	return ns
+}

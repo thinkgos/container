@@ -19,6 +19,8 @@ package sets
 import (
 	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/require"
 )
 
 func TestInt64Set(t *testing.T) {
@@ -285,4 +287,20 @@ func TestInt64Intersection(t *testing.T) {
 				intersection.List(), test.expected.List())
 		}
 	}
+}
+
+func TestInt64_Each(t *testing.T) {
+	expect := NewInt64(1, 2, 3, 4)
+	s1 := NewInt64(1, 2, 3, 4)
+	s1.Each(func(item interface{}) bool {
+		require.True(t, expect.Contains(item.(int64)))
+		return item.(int64) != 3
+	})
+}
+
+func TestInt64_Clone(t *testing.T) {
+	s1 := NewInt64(1, 2, 3, 4)
+	s2 := s1.Clone()
+
+	require.True(t, s1.Equal(s2))
 }
