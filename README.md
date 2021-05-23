@@ -13,7 +13,7 @@ container implements some containers, currently the containers are not thread-sa
 
 - **[How to use this repo](#how-to-use-this-package)**
 - **[Containers](#Containers-Interface)**
-  - [Sets](#sets) support`interface{}` which implement Comparator interface and builtin type.
+  - [Sets](#sets) move to [sets](https://github.com/things-go/sets)
   - [Stack](#stack) 
     - stack use container/list.
     - quick stack use builtin slice.

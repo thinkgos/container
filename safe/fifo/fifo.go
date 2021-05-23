@@ -20,8 +20,8 @@ import (
 	"errors"
 	"sync"
 
+	"github.com/things-go/sets"
 	"github.com/thinkgos/container"
-	"github.com/thinkgos/container/sets"
 )
 
 // PopProcessFunc is passed to Pop() method of Queue interface.
