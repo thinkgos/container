@@ -21,6 +21,7 @@ import (
 	"sync"
 
 	"github.com/things-go/sets"
+
 	"github.com/thinkgos/container"
 )
 
@@ -357,10 +358,7 @@ func (sf *FIFO) Resync() error {
 	sf.lock.Lock()
 	defer sf.lock.Unlock()
 
-	inQueue := sets.NewString()
-	for _, key := range sf.queue {
-		inQueue.Insert(key)
-	}
+	inQueue := sets.NewString().Insert(sf.queue...)
 	for key := range sf.items {
 		if !inQueue.Contains(key) {
 			sf.queue = append(sf.queue, key)
